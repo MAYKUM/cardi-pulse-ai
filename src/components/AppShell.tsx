@@ -24,8 +24,10 @@ const navigation = [
   { name: "New Patient", href: "/patients/new", icon: Users, count: null },
   { name: "Imaging", href: "/imaging", icon: Camera, count: null },
   { name: "ECG Analysis", href: "/ecg", icon: Activity, count: 2 },
-  { name: "Reports", href: "/reports", icon: FileText, count: 3 },
+  { name: "Echo Reports", href: "/echo", icon: Stethoscope, count: 3 },
+  { name: "Lab Results", href: "/lab", icon: FileText, count: 1 },
   { name: "Telecardiology", href: "/telehealth", icon: Stethoscope, count: null },
+  { name: "Device Integration", href: "/devices", icon: Settings, count: null },
   { name: "Appointments", href: "/appointments", icon: Calendar, count: 8 },
 ];
 

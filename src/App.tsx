@@ -8,6 +8,11 @@ import { PatientDashboard } from "./components/PatientDashboard";
 import { PatientIntakeForm } from "./components/PatientIntakeForm";
 import { DicomViewer } from "./components/DicomViewer";
 import { EcgAnalysis } from "./components/EcgAnalysis";
+import { EchoReports } from "./components/EchoReports";
+import { LabResults } from "./components/LabResults";
+import { Telecardiology } from "./components/Telecardiology";
+import { DeviceIntegration } from "./components/DeviceIntegration";
+import { Appointments } from "./components/Appointments";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 
@@ -25,6 +30,11 @@ const App = () => (
             <Route path="patients/new" element={<PatientIntakeForm />} />
             <Route path="imaging" element={<DicomViewer />} />
             <Route path="ecg" element={<EcgAnalysis />} />
+            <Route path="echo" element={<EchoReports />} />
+            <Route path="lab" element={<LabResults />} />
+            <Route path="telehealth" element={<Telecardiology />} />
+            <Route path="devices" element={<DeviceIntegration />} />
+            <Route path="appointments" element={<Appointments />} />
           </Route>
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
