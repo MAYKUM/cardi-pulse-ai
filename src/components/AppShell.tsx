@@ -1,38 +1,28 @@
 import { useState } from "react";
 import { 
   Heart, 
-  Users, 
-  FileText, 
-  Camera, 
-  Activity, 
-  Stethoscope, 
-  Calendar,
-  Settings,
-  Bell,
   Search,
   Menu,
-  X
+  X,
+  MessageSquare,
+  User,
+  MapPin,
+  Video,
+  AlertTriangle,
+  Bell
 } from "lucide-react";
 import { NavLink, Outlet } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
-
-const navigation = [
-  { name: "Dashboard", href: "/", icon: Heart, count: null },
-  { name: "New Patient", href: "/patients/new", icon: Users, count: null },
-  { name: "Imaging", href: "/imaging", icon: Camera, count: null },
-  { name: "ECG Analysis", href: "/ecg", icon: Activity, count: 2 },
-  { name: "Echo Reports", href: "/echo", icon: Stethoscope, count: 3 },
-  { name: "Lab Results", href: "/lab", icon: FileText, count: 1 },
-  { name: "Telecardiology", href: "/telehealth", icon: Stethoscope, count: null },
-  { name: "Device Integration", href: "/devices", icon: Settings, count: null },
-  { name: "Appointments", href: "/appointments", icon: Calendar, count: 8 },
-];
+import { navigationConfig, headerActionsConfig } from "@/config/app-config";
 
 export function AppShell() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [notificationsPanelOpen, setNotificationsPanelOpen] = useState(false);
 
   return (
     <div className="min-h-screen bg-background">
@@ -78,28 +68,104 @@ export function AppShell() {
               />
             </div>
             <div className="flex items-center gap-x-4 lg:gap-x-6">
-              <Button variant="ghost" size="sm" className="relative">
-                <Bell className="h-5 w-5" />
-                <Badge 
-                  variant="destructive" 
-                  className="absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 text-xs"
-                >
-                  3
-                </Badge>
-              </Button>
-              <Button variant="ghost" size="sm">
-                <Settings className="h-5 w-5" />
-              </Button>
-              <div className="h-6 w-px bg-border" />
-              <div className="flex items-center gap-x-2">
-                <div className="h-8 w-8 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center">
-                  <span className="text-sm font-medium text-primary-foreground">DC</span>
-                </div>
-                <div className="hidden sm:block">
-                  <p className="text-sm font-medium">Dr. Cardio</p>
-                  <p className="text-xs text-muted-foreground">Cardiologist</p>
-                </div>
-              </div>
+              {/* Notifications */}
+              <Popover open={notificationsPanelOpen} onOpenChange={setNotificationsPanelOpen}>
+                <PopoverTrigger asChild>
+                  <Button variant="ghost" size="sm" className="relative">
+                    <AlertTriangle className="h-5 w-5" />
+                    <Badge 
+                      variant="destructive" 
+                      className="absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 text-xs"
+                    >
+                      3
+                    </Badge>
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-80 p-0" align="end">
+                  <div className="p-4 border-b">
+                    <h3 className="font-semibold">Notifications</h3>
+                  </div>
+                  <div className="max-h-64 overflow-y-auto">
+                    <div className="p-3 border-b hover:bg-muted/50 cursor-pointer">
+                      <p className="text-sm font-medium">Critical Lab Result</p>
+                      <p className="text-xs text-muted-foreground">Patient: Rajesh Kumar - Troponin elevated</p>
+                      <p className="text-xs text-muted-foreground">2 min ago</p>
+                    </div>
+                    <div className="p-3 border-b hover:bg-muted/50 cursor-pointer">
+                      <p className="text-sm font-medium">Appointment Reminder</p>
+                      <p className="text-xs text-muted-foreground">Sarah Johnson - Follow-up in 30 mins</p>
+                      <p className="text-xs text-muted-foreground">28 min ago</p>
+                    </div>
+                    <div className="p-3 hover:bg-muted/50 cursor-pointer">
+                      <p className="text-sm font-medium">Device Alert</p>
+                      <p className="text-xs text-muted-foreground">ECG Machine offline - Room 3</p>
+                      <p className="text-xs text-muted-foreground">1 hour ago</p>
+                    </div>
+                  </div>
+                </PopoverContent>
+              </Popover>
+
+              {/* Messages */}
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button variant="ghost" size="sm" className="relative">
+                    <MessageSquare className="h-5 w-5" />
+                    <Badge 
+                      variant="secondary" 
+                      className="absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 text-xs"
+                    >
+                      2
+                    </Badge>
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-72 p-0" align="end">
+                  <div className="p-4 border-b">
+                    <h3 className="font-semibold">Recent Chats</h3>
+                  </div>
+                  <div className="max-h-48 overflow-y-auto">
+                    <div className="p-3 border-b hover:bg-muted/50 cursor-pointer">
+                      <div className="flex items-center space-x-2">
+                        <div className="h-8 w-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs">
+                          DN
+                        </div>
+                        <div className="flex-1">
+                          <p className="text-sm font-medium">Dr. Nurse</p>
+                          <p className="text-xs text-muted-foreground">Patient update needed...</p>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="p-3 hover:bg-muted/50 cursor-pointer">
+                      <div className="flex items-center space-x-2">
+                        <div className="h-8 w-8 rounded-full bg-accent text-accent-foreground flex items-center justify-center text-xs">
+                          LT
+                        </div>
+                        <div className="flex-1">
+                          <p className="text-sm font-medium">Lab Tech</p>
+                          <p className="text-xs text-muted-foreground">Results ready for review</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </PopoverContent>
+              </Popover>
+
+              {/* Profile */}
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <div className="flex items-center gap-x-2 cursor-pointer">
+                    <div className="h-8 w-8 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center">
+                      <span className="text-sm font-medium text-primary-foreground">DC</span>
+                    </div>
+                    <div className="hidden sm:block">
+                      <p className="text-sm font-medium">Dr. Cardio</p>
+                      <p className="text-xs text-muted-foreground">Cardiologist</p>
+                    </div>
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Dr. Cardio - Cardiologist</p>
+                </TooltipContent>
+              </Tooltip>
             </div>
           </div>
         </div>
@@ -135,32 +201,41 @@ function SidebarContent({ onClose }: { onClose?: () => void }) {
 
       {/* Navigation */}
       <nav className="flex flex-1 flex-col px-6">
-        <ul className="flex flex-1 flex-col gap-y-1">
-          {navigation.map((item) => (
-            <li key={item.name}>
-              <NavLink
-                to={item.href}
-                className={({ isActive }) =>
-                  cn(
-                    "group flex gap-x-3 rounded-md p-2 text-sm font-medium transition-colors",
-                    isActive
-                      ? "bg-primary-soft text-primary"
-                      : "text-muted-foreground hover:bg-muted hover:text-foreground"
-                  )
-                }
-                onClick={onClose}
-              >
-                <item.icon className="h-5 w-5 shrink-0" />
-                <span className="flex-1">{item.name}</span>
-                {item.count && (
-                  <Badge variant="secondary" className="ml-auto">
-                    {item.count}
-                  </Badge>
-                )}
-              </NavLink>
-            </li>
+        <div className="flex flex-1 flex-col gap-y-6">
+          {navigationConfig.map((group) => (
+            <div key={group.title}>
+              <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
+                {group.title}
+              </h3>
+              <ul className="space-y-1">
+                {group.items.map((item) => (
+                  <li key={item.name}>
+                    <NavLink
+                      to={item.href}
+                      className={({ isActive }) =>
+                        cn(
+                          "group flex gap-x-3 rounded-md p-2 text-sm font-medium transition-colors",
+                          isActive
+                            ? "bg-primary-soft text-primary"
+                            : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                        )
+                      }
+                      onClick={onClose}
+                    >
+                      <item.icon className="h-5 w-5 shrink-0" />
+                      <span className="flex-1">{item.name}</span>
+                      {item.count && (
+                        <Badge variant="secondary" className="ml-auto">
+                          {item.count}
+                        </Badge>
+                      )}
+                    </NavLink>
+                  </li>
+                ))}
+              </ul>
+            </div>
           ))}
-        </ul>
+        </div>
 
         {/* Emergency contact card */}
         <div className="mt-auto mb-6 p-4 bg-critical/5 border border-critical/20 rounded-lg">
