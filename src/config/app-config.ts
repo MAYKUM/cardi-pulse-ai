@@ -19,9 +19,16 @@ import {
   MapPin,
   Eye,
   MoreHorizontal,
-  Video
+  Video,
+  Brain,
+  Microscope,
+  Pill,
+  ClipboardList,
+  Monitor,
+  UserCheck
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
+import type { UserType } from "@/contexts/AuthContext";
 
 // Navigation Configuration
 export interface NavigationGroup {
@@ -36,7 +43,8 @@ export interface NavigationItem {
   count?: number | null;
 }
 
-export const navigationConfig: NavigationGroup[] = [
+// Specialty-specific configurations
+const cardioNavigationConfig: NavigationGroup[] = [
   {
     title: "Main",
     items: [
@@ -72,6 +80,46 @@ export const navigationConfig: NavigationGroup[] = [
   }
 ];
 
+const genericNavigationConfig: NavigationGroup[] = [
+  {
+    title: "Main",
+    items: [
+      { name: "Dashboard", href: "/", icon: Monitor },
+      { name: "Patients", href: "/patients", icon: Users },
+      { name: "New Patient", href: "/patients/new", icon: UserPlus },
+      { name: "Appointments", href: "/appointments", icon: Calendar, count: 8 },
+    ]
+  },
+  {
+    title: "Diagnostics & Reports",
+    items: [
+      { name: "Lab Results", href: "/lab", icon: FileText, count: 1 },
+      { name: "Medical Imaging", href: "/imaging", icon: Camera },
+      { name: "Test Reports", href: "/reports", icon: ClipboardList },
+      { name: "Vital Signs", href: "/vitals", icon: Activity },
+    ]
+  },
+  {
+    title: "Telemedicine & Integration",
+    items: [
+      { name: "Telemedicine", href: "/telehealth", icon: Video },
+      { name: "Device Integration", href: "/devices", icon: Settings },
+      { name: "Integration Hub", href: "/integrations", icon: Zap },
+    ]
+  },
+  {
+    title: "Settings & Security",
+    items: [
+      { name: "Security", href: "/security", icon: Shield },
+      { name: "Settings", href: "/settings", icon: Settings },
+    ]
+  }
+];
+
+export const getNavigationConfig = (userType: UserType): NavigationGroup[] => {
+  return userType === 'cardio' ? cardioNavigationConfig : genericNavigationConfig;
+};
+
 // Header Actions Configuration
 export interface HeaderAction {
   name: string;
@@ -82,7 +130,7 @@ export interface HeaderAction {
   action?: string;
 }
 
-export const headerActionsConfig: HeaderAction[] = [
+export const getHeaderActionsConfig = (userType: UserType): HeaderAction[] => [
   {
     name: "notifications",
     icon: AlertTriangle,
@@ -101,7 +149,7 @@ export const headerActionsConfig: HeaderAction[] = [
     name: "profile",
     icon: Users,
     type: "tooltip",
-    tooltip: "Dr. Cardio - Cardiologist"
+    tooltip: userType === 'cardio' ? "Dr. Cardio - Cardiologist" : "Dr. Generic - Physician"
   }
 ];
 
@@ -114,7 +162,7 @@ export interface DashboardCard {
   color: string;
 }
 
-export const dashboardCardsConfig: DashboardCard[] = [
+const cardioDashboardCards: DashboardCard[] = [
   {
     title: "Total Patients",
     value: 2847,
@@ -144,6 +192,41 @@ export const dashboardCardsConfig: DashboardCard[] = [
     color: "text-success"
   }
 ];
+
+const genericDashboardCards: DashboardCard[] = [
+  {
+    title: "Total Patients",
+    value: 1924,
+    delta: "+8 this week",
+    icon: Users,
+    color: "text-primary"
+  },
+  {
+    title: "Today's Appointments",
+    value: 18,
+    delta: "6 remaining",
+    icon: Calendar,
+    color: "text-accent"
+  },
+  {
+    title: "Lab Reports",
+    value: 12,
+    delta: "3 pending",
+    icon: FileText,
+    color: "text-warning"
+  },
+  {
+    title: "Treatment Success",
+    value: "91.8%",
+    delta: "This month",
+    icon: TrendingUp,
+    color: "text-success"
+  }
+];
+
+export const getDashboardCardsConfig = (userType: UserType): DashboardCard[] => {
+  return userType === 'cardio' ? cardioDashboardCards : genericDashboardCards;
+};
 
 // Quick Actions Configuration
 export interface QuickAction {

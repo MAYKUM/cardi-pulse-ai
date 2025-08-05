@@ -9,7 +9,8 @@ import {
   MapPin,
   Video,
   AlertTriangle,
-  Bell
+  Bell,
+  Stethoscope
 } from "lucide-react";
 import { NavLink, Outlet } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -18,11 +19,16 @@ import { Badge } from "@/components/ui/badge";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
-import { navigationConfig, headerActionsConfig } from "@/config/app-config";
+import { getNavigationConfig, getHeaderActionsConfig } from "@/config/app-config";
+import { useAuth } from "@/contexts/AuthContext";
 
 export function AppShell() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [notificationsPanelOpen, setNotificationsPanelOpen] = useState(false);
+  const { user } = useAuth();
+  
+  const navigationConfig = getNavigationConfig(user?.type || 'generic');
+  const headerActionsConfig = getHeaderActionsConfig(user?.type || 'generic');
 
   return (
     <div className="min-h-screen bg-background">
@@ -154,16 +160,20 @@ export function AppShell() {
                 <TooltipTrigger asChild>
                   <div className="flex items-center gap-x-2 cursor-pointer">
                     <div className="h-8 w-8 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center">
-                      <span className="text-sm font-medium text-primary-foreground">DC</span>
+                      <span className="text-sm font-medium text-primary-foreground">
+                        {user?.type === 'cardio' ? 'DC' : 'DG'}
+                      </span>
                     </div>
                     <div className="hidden sm:block">
-                      <p className="text-sm font-medium">Dr. Cardio</p>
-                      <p className="text-xs text-muted-foreground">Cardiologist</p>
+                      <p className="text-sm font-medium">{user?.name || 'Doctor'}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {user?.type === 'cardio' ? 'Cardiologist' : 'Physician'}
+                      </p>
                     </div>
                   </div>
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p>Dr. Cardio - Cardiologist</p>
+                  <p>{user?.name} - {user?.type === 'cardio' ? 'Cardiologist' : 'Physician'}</p>
                 </TooltipContent>
               </Tooltip>
             </div>
@@ -182,15 +192,24 @@ export function AppShell() {
 }
 
 function SidebarContent({ onClose }: { onClose?: () => void }) {
+  const { user } = useAuth();
+  const navigationConfig = getNavigationConfig(user?.type || 'generic');
+  
   return (
     <>
       {/* Logo and close button */}
       <div className="flex h-16 shrink-0 items-center justify-between px-6">
         <div className="flex items-center gap-x-3">
           <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-primary to-accent flex items-center justify-center">
-            <Heart className="h-5 w-5 text-primary-foreground" />
+            {user?.type === 'cardio' ? (
+              <Heart className="h-5 w-5 text-primary-foreground" />
+            ) : (
+              <Stethoscope className="h-5 w-5 text-primary-foreground" />
+            )}
           </div>
-          <span className="text-lg font-semibold">CardioAI</span>
+          <span className="text-lg font-semibold">
+            {user?.type === 'cardio' ? 'CardioAI' : 'MedicalAI'}
+          </span>
         </div>
         {onClose && (
           <Button variant="ghost" size="sm" onClick={onClose} className="lg:hidden">

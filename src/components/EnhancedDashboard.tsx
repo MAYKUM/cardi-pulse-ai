@@ -24,16 +24,19 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { 
-  dashboardCardsConfig,
+  getDashboardCardsConfig,
   quickActionsConfig,
   patientTableColumns,
   recentPatientsData,
   todayScheduleConfig
 } from "@/config/app-config";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 
 export function EnhancedDashboard() {
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const dashboardCardsConfig = getDashboardCardsConfig(user?.type || 'generic');
 
   const getStatusBadgeVariant = (status: string) => {
     switch (status) {
