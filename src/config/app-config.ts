@@ -19,12 +19,7 @@ import {
   MapPin,
   Eye,
   MoreHorizontal,
-  Video,
-  Brain,
-  Scan,
-  LayoutDashboard,
-  FlaskConical,
-  Smartphone
+  Video
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
@@ -45,27 +40,26 @@ export const navigationConfig: NavigationGroup[] = [
   {
     title: "Main",
     items: [
-      { name: "Dashboard", href: "/", icon: LayoutDashboard },
+      { name: "Dashboard", href: "/", icon: Heart },
       { name: "Patients", href: "/patients", icon: Users },
       { name: "New Patient", href: "/patients/new", icon: UserPlus },
       { name: "Appointments", href: "/appointments", icon: Calendar, count: 8 },
     ]
   },
   {
-    title: "Neurology Diagnostics",
+    title: "Diagnostics & Reports",
     items: [
-      { name: "EEG Analysis", href: "/eeg", icon: Activity, count: 2 },
-      { name: "Neuroimaging", href: "/neuroimaging", icon: Scan, count: 3 },
-      { name: "EMG/NCS Studies", href: "/emg", icon: Zap, count: 1 },
-      { name: "Neuropsych Tests", href: "/neuropsych", icon: Brain },
-      { name: "Lab Results", href: "/lab", icon: FlaskConical, count: 1 },
+      { name: "ECG Analysis", href: "/ecg", icon: Activity, count: 2 },
+      { name: "Echo Reports", href: "/echo", icon: Stethoscope, count: 3 },
+      { name: "Lab Results", href: "/lab", icon: FileText, count: 1 },
+      { name: "DICOM Viewer", href: "/imaging", icon: Camera },
     ]
   },
   {
-    title: "TeleNeurology & Integration",
+    title: "Telecardiology & Integration",
     items: [
-      { name: "TeleNeurology", href: "/telehealth", icon: Video },
-      { name: "Device Integration", href: "/devices", icon: Smartphone },
+      { name: "Telecardiology", href: "/telehealth", icon: Stethoscope },
+      { name: "Device Integration", href: "/devices", icon: Settings },
       { name: "Integration Hub", href: "/integrations", icon: Zap },
     ]
   },
@@ -281,13 +275,13 @@ export const todayScheduleConfig: ScheduleItem[] = [
   }
 ];
 
-// Mock data for recent patients - Neurology focused
+// Mock data for recent patients
 export const recentPatientsData = [
   {
     id: "P001",
     name: "Rajesh Kumar",
     age: 58,
-    condition: "Epilepsy",
+    condition: "Hypertension",
     lastVisit: "2024-01-15",
     status: "active",
     initials: "RK"
@@ -296,7 +290,7 @@ export const recentPatientsData = [
     id: "P002", 
     name: "Priya Sharma",
     age: 45,
-    condition: "Migraine",
+    condition: "Arrhythmia",
     lastVisit: "2024-01-12",
     status: "follow-up",
     initials: "PS"
@@ -305,7 +299,7 @@ export const recentPatientsData = [
     id: "P003",
     name: "Amit Patel", 
     age: 62,
-    condition: "Stroke Recovery",
+    condition: "CAD",
     lastVisit: "2024-01-10",
     status: "stable",
     initials: "AP"
@@ -314,7 +308,7 @@ export const recentPatientsData = [
     id: "P004",
     name: "Sarah Johnson",
     age: 39,
-    condition: "Multiple Sclerosis",
+    condition: "Heart Failure",
     lastVisit: "2024-01-08",
     status: "critical",
     initials: "SJ"
@@ -323,7 +317,7 @@ export const recentPatientsData = [
     id: "P005",
     name: "David Chen",
     age: 51,
-    condition: "Parkinson's Disease",
+    condition: "Chest Pain",
     lastVisit: "2024-01-05",
     status: "active",
     initials: "DC"
