@@ -116,8 +116,55 @@ const genericNavigationConfig: NavigationGroup[] = [
   }
 ];
 
+const neurologyNavigationConfig: NavigationGroup[] = [
+  {
+    title: "Main",
+    items: [
+      { name: "Dashboard", href: "/", icon: Brain },
+      { name: "Patients", href: "/patients", icon: Users },
+      { name: "New Patient", href: "/patients/new", icon: UserPlus },
+      { name: "Appointments", href: "/appointments", icon: Calendar, count: 12 },
+    ]
+  },
+  {
+    title: "Neurological Diagnostics",
+    items: [
+      { name: "EEG Analysis", href: "/eeg", icon: Activity, count: 5 },
+      { name: "Video-EEG", href: "/video-eeg", icon: Video, count: 2 },
+      { name: "EMG/NCS Reports", href: "/emg", icon: Zap, count: 3 },
+      { name: "Neuroimaging", href: "/imaging", icon: Camera },
+    ]
+  },
+  {
+    title: "Assessment & Monitoring",
+    items: [
+      { name: "Neuropsych Tests", href: "/neuropsych", icon: Brain },
+      { name: "Movement Tracking", href: "/movement", icon: Activity },
+      { name: "Lab Results", href: "/lab", icon: FileText, count: 4 },
+      { name: "Seizure Logs", href: "/seizure-logs", icon: ClipboardList },
+    ]
+  },
+  {
+    title: "Tele-Neurology & Integration",
+    items: [
+      { name: "Tele-Neurology", href: "/telehealth", icon: Stethoscope },
+      { name: "Device Integration", href: "/devices", icon: Settings },
+      { name: "Integration Hub", href: "/integrations", icon: Zap },
+    ]
+  },
+  {
+    title: "Settings & Security",
+    items: [
+      { name: "Security", href: "/security", icon: Shield },
+      { name: "Settings", href: "/settings", icon: Settings },
+    ]
+  }
+];
+
 export const getNavigationConfig = (userType: UserType): NavigationGroup[] => {
-  return userType === 'cardio' ? cardioNavigationConfig : genericNavigationConfig;
+  if (userType === 'cardio') return cardioNavigationConfig;
+  if (userType === 'neurology') return neurologyNavigationConfig;
+  return genericNavigationConfig;
 };
 
 // Header Actions Configuration
@@ -149,7 +196,9 @@ export const getHeaderActionsConfig = (userType: UserType): HeaderAction[] => [
     name: "profile",
     icon: Users,
     type: "tooltip",
-    tooltip: userType === 'cardio' ? "Dr. Cardio - Cardiologist" : "Dr. Generic - Physician"
+    tooltip: userType === 'cardio' ? "Dr. Cardio - Cardiologist" : 
+             userType === 'neurology' ? "Dr. Neurologist - Neurologist" : 
+             "Dr. Generic - Physician"
   }
 ];
 
@@ -224,8 +273,41 @@ const genericDashboardCards: DashboardCard[] = [
   }
 ];
 
+const neurologyDashboardCards: DashboardCard[] = [
+  {
+    title: "Total Patients",
+    value: 1432,
+    delta: "+15 this week",
+    icon: Users,
+    color: "text-primary"
+  },
+  {
+    title: "Today's Appointments",
+    value: 16,
+    delta: "4 remaining",
+    icon: Calendar,
+    color: "text-accent"
+  },
+  {
+    title: "EEG Studies",
+    value: 28,
+    delta: "8 pending",
+    icon: Activity,
+    color: "text-warning"
+  },
+  {
+    title: "Seizure Control",
+    value: "89.3%",
+    delta: "This quarter",
+    icon: TrendingUp,
+    color: "text-success"
+  }
+];
+
 export const getDashboardCardsConfig = (userType: UserType): DashboardCard[] => {
-  return userType === 'cardio' ? cardioDashboardCards : genericDashboardCards;
+  if (userType === 'cardio') return cardioDashboardCards;
+  if (userType === 'neurology') return neurologyDashboardCards;
+  return genericDashboardCards;
 };
 
 // Quick Actions Configuration

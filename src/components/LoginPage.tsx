@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Heart, Stethoscope, LogIn } from 'lucide-react';
+import { Heart, Stethoscope, LogIn, Brain } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import type { UserType } from '@/contexts/AuthContext';
 
@@ -43,6 +43,12 @@ export const LoginPage: React.FC = () => {
                     <span>Cardiology</span>
                   </div>
                 </SelectItem>
+                <SelectItem value="neurology">
+                  <div className="flex items-center gap-2">
+                    <Brain className="w-4 h-4 text-purple-600" />
+                    <span>Neurology</span>
+                  </div>
+                </SelectItem>
                 <SelectItem value="generic">
                   <div className="flex items-center gap-2">
                     <Stethoscope className="w-4 h-4 text-accent" />
@@ -65,6 +71,8 @@ export const LoginPage: React.FC = () => {
               <div className="text-sm text-muted-foreground text-center">
                 {selectedSpecialty === 'cardio' 
                   ? 'Accessing specialized cardiovascular care platform' 
+                  : selectedSpecialty === 'neurology'
+                  ? 'Accessing specialized neurological care platform'
                   : 'Accessing multi-specialty medical platform'}
               </div>
             )}

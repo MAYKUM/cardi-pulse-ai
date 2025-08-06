@@ -17,6 +17,9 @@ import { Telecardiology } from "./components/Telecardiology";
 import { DeviceIntegration } from "./components/DeviceIntegration";
 import { Appointments } from "./components/Appointments";
 import { IntegrationsHub } from "./components/IntegrationsHub";
+import { EEGAnalysis } from "./components/EEGAnalysis";
+import { VideoEEG } from "./components/VideoEEG";
+import { EMGPanel } from "./components/EMGPanel";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 
@@ -49,6 +52,16 @@ function AppRoutes() {
           <>
             <Route path="ecg" element={<EcgAnalysis />} />
             <Route path="echo" element={<EchoReports />} />
+          </>
+        )}
+        {user.type === 'neurology' && (
+          <>
+            <Route path="eeg" element={<EEGAnalysis />} />
+            <Route path="video-eeg" element={<VideoEEG />} />
+            <Route path="emg" element={<EMGPanel />} />
+            <Route path="neuropsych" element={<div>Neuropsychological Tests</div>} />
+            <Route path="movement" element={<div>Movement Tracking</div>} />
+            <Route path="seizure-logs" element={<div>Seizure Logs</div>} />
           </>
         )}
         <Route path="lab" element={<LabResults />} />

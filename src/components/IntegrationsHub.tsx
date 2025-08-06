@@ -2,7 +2,7 @@ import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth, UserType } from '@/contexts/AuthContext';
 import { 
   Database, 
   Cloud, 
@@ -25,7 +25,7 @@ interface Integration {
   icon: React.ComponentType<any>;
   status: 'connected' | 'available' | 'coming-soon';
   category: string;
-  userTypes?: ('cardio' | 'generic')[];
+  userTypes?: UserType[];
 }
 
 const integrations: Integration[] = [
@@ -139,7 +139,44 @@ const integrations: Integration[] = [
     icon: Brain,
     status: 'available',
     category: 'Neurology',
-    userTypes: ['generic']
+    userTypes: ['generic', 'neurology']
+  },
+  // Neurology-specific
+  {
+    id: 'eeg-systems',
+    name: 'EEG Analysis Systems',
+    description: 'Advanced EEG monitoring and AI-powered seizure detection',
+    icon: Brain,
+    status: 'connected',
+    category: 'Neurological Diagnostics',
+    userTypes: ['neurology']
+  },
+  {
+    id: 'emg-ncs',
+    name: 'EMG/NCS Equipment',
+    description: 'Electromyography and nerve conduction study systems',
+    icon: Activity,
+    status: 'connected',
+    category: 'Neurological Diagnostics',
+    userTypes: ['neurology']
+  },
+  {
+    id: 'video-eeg',
+    name: 'Video-EEG Monitoring',
+    description: 'Long-term video-EEG monitoring systems for epilepsy',
+    icon: Monitor,
+    status: 'available',
+    category: 'Neurological Diagnostics',
+    userTypes: ['neurology']
+  },
+  {
+    id: 'seizure-tracking',
+    name: 'Seizure Diary Apps',
+    description: 'Patient apps for seizure logging and medication tracking',
+    icon: Smartphone,
+    status: 'available',
+    category: 'Patient Engagement',
+    userTypes: ['neurology']
   },
   {
     id: 'vital-monitors',

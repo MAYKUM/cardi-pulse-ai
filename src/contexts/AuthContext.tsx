@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
-export type UserType = 'cardio' | 'generic';
+export type UserType = 'cardio' | 'generic' | 'neurology';
 
 interface User {
   id: string;
@@ -45,10 +45,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const login = (userType: UserType) => {
     const userData: User = {
-      id: userType === 'cardio' ? 'cardio-001' : 'generic-001',
-      name: userType === 'cardio' ? 'Dr. Cardio' : 'Dr. Generic',
+      id: userType === 'cardio' ? 'cardio-001' : userType === 'neurology' ? 'neuro-001' : 'generic-001',
+      name: userType === 'cardio' ? 'Dr. Cardio' : userType === 'neurology' ? 'Dr. Neurologist' : 'Dr. Generic',
       type: userType,
-      email: userType === 'cardio' ? 'cardio@hospital.com' : 'generic@hospital.com'
+      email: userType === 'cardio' ? 'cardio@hospital.com' : userType === 'neurology' ? 'neuro@hospital.com' : 'generic@hospital.com'
     };
     
     setUser(userData);
