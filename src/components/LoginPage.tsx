@@ -1,70 +1,75 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Heart, Stethoscope } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Heart, Stethoscope, LogIn } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
+import type { UserType } from '@/contexts/AuthContext';
 
 export const LoginPage: React.FC = () => {
   const { login } = useAuth();
+  const [selectedSpecialty, setSelectedSpecialty] = useState<UserType | ''>('');
+
+  const handleLogin = () => {
+    if (selectedSpecialty) {
+      login(selectedSpecialty);
+    }
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background p-4">
       <div className="w-full max-w-md space-y-6">
         <div className="text-center space-y-2">
+          <div className="mx-auto w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-4">
+            <Heart className="w-8 h-8 text-primary" />
+          </div>
           <h1 className="text-3xl font-bold text-foreground">Medical Platform</h1>
-          <p className="text-muted-foreground">Choose your specialty to continue</p>
+          <p className="text-muted-foreground">Select your specialty and login to continue</p>
         </div>
         
-        <div className="grid gap-4">
-          <Card className="cursor-pointer transition-all hover:shadow-lg hover:scale-105" 
-                onClick={() => login('cardio')}>
-            <CardHeader className="text-center">
-              <div className="mx-auto w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
-                <Heart className="w-6 h-6 text-primary" />
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-center">Choose Your Specialty</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <Select value={selectedSpecialty} onValueChange={(value: UserType) => setSelectedSpecialty(value)}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select medical specialty" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="cardio">
+                  <div className="flex items-center gap-2">
+                    <Heart className="w-4 h-4 text-primary" />
+                    <span>Cardiology</span>
+                  </div>
+                </SelectItem>
+                <SelectItem value="generic">
+                  <div className="flex items-center gap-2">
+                    <Stethoscope className="w-4 h-4 text-accent" />
+                    <span>General Medicine</span>
+                  </div>
+                </SelectItem>
+              </SelectContent>
+            </Select>
+            
+            <Button 
+              className="w-full" 
+              onClick={handleLogin}
+              disabled={!selectedSpecialty}
+            >
+              <LogIn className="w-4 h-4 mr-2" />
+              Login to Portal
+            </Button>
+            
+            {selectedSpecialty && (
+              <div className="text-sm text-muted-foreground text-center">
+                {selectedSpecialty === 'cardio' 
+                  ? 'Accessing specialized cardiovascular care platform' 
+                  : 'Accessing multi-specialty medical platform'}
               </div>
-              <CardTitle className="text-xl">Cardiology</CardTitle>
-              <CardDescription>
-                Specialized cardiovascular care platform
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Button 
-                className="w-full" 
-                onClick={(e) => {
-                  e.stopPropagation();
-                  login('cardio');
-                }}
-              >
-                Enter Cardiology Portal
-              </Button>
-            </CardContent>
-          </Card>
-
-          <Card className="cursor-pointer transition-all hover:shadow-lg hover:scale-105" 
-                onClick={() => login('generic')}>
-            <CardHeader className="text-center">
-              <div className="mx-auto w-12 h-12 bg-accent/10 rounded-full flex items-center justify-center">
-                <Stethoscope className="w-6 h-6 text-accent" />
-              </div>
-              <CardTitle className="text-xl">General Medicine</CardTitle>
-              <CardDescription>
-                Multi-specialty medical platform
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Button 
-                variant="outline" 
-                className="w-full"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  login('generic');
-                }}
-              >
-                Enter Medical Portal
-              </Button>
-            </CardContent>
-          </Card>
-        </div>
+            )}
+          </CardContent>
+        </Card>
       </div>
     </div>
   );

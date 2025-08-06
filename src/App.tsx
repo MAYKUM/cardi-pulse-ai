@@ -16,6 +16,7 @@ import { LabResults } from "./components/LabResults";
 import { Telecardiology } from "./components/Telecardiology";
 import { DeviceIntegration } from "./components/DeviceIntegration";
 import { Appointments } from "./components/Appointments";
+import { IntegrationsHub } from "./components/IntegrationsHub";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 
@@ -54,7 +55,7 @@ function AppRoutes() {
         <Route path="telehealth" element={<Telecardiology />} />
         <Route path="devices" element={<DeviceIntegration />} />
         <Route path="appointments" element={<Appointments />} />
-        <Route path="integrations" element={<div>Integration Hub</div>} />
+        <Route path="integrations" element={<IntegrationsHub />} />
         <Route path="security" element={<div>Security Settings</div>} />
         <Route path="settings" element={<div>Settings</div>} />
         <Route path="upload" element={<div>Upload Images</div>} />
