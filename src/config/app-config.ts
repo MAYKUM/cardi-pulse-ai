@@ -116,6 +116,44 @@ const genericNavigationConfig: NavigationGroup[] = [
   }
 ];
 
+const orthopedicsNavigationConfig: NavigationGroup[] = [
+  {
+    title: "Main",
+    items: [
+      { name: "Dashboard", href: "/orthopedics/dashboard", icon: Users },
+      { name: "Patients", href: "/orthopedics/patients", icon: Users },
+      { name: "New Patient", href: "/orthopedics/patients/new", icon: UserPlus },
+      { name: "Appointments", href: "/orthopedics/appointments", icon: Calendar, count: 15 },
+    ]
+  },
+  {
+    title: "Imaging & Analysis",
+    items: [
+      { name: "X-ray Analysis", href: "/orthopedics/xray", icon: Activity, count: 8 },
+      { name: "3D Bone Viewer", href: "/orthopedics/3d-viewer", icon: Eye },
+      { name: "Surgical Planning", href: "/orthopedics/surgical-planning", icon: Target },
+      { name: "Medical Imaging", href: "/orthopedics/imaging", icon: Camera },
+    ]
+  },
+  {
+    title: "Treatment & Recovery",
+    items: [
+      { name: "Rehabilitation", href: "/orthopedics/rehab", icon: Activity },
+      { name: "Fracture Healing", href: "/orthopedics/fracture-healing", icon: TrendingUp },
+      { name: "Osteoporosis Risk", href: "/orthopedics/osteoporosis", icon: AlertTriangle },
+      { name: "Joint Registry", href: "/orthopedics/joint-registry", icon: Pill },
+    ]
+  },
+  {
+    title: "Telemedicine & Integration",
+    items: [
+      { name: "Tele-Ortho", href: "/orthopedics/tele-consult", icon: Video },
+      { name: "Integration Hub", href: "/orthopedics/integrations", icon: Zap },
+      { name: "Lab Results", href: "/orthopedics/lab", icon: FileText, count: 4 },
+    ]
+  }
+];
+
 const neurologyNavigationConfig: NavigationGroup[] = [
   {
     title: "Main",
@@ -164,6 +202,7 @@ const neurologyNavigationConfig: NavigationGroup[] = [
 export const getNavigationConfig = (userType: UserType): NavigationGroup[] => {
   if (userType === 'cardio') return cardioNavigationConfig;
   if (userType === 'neurology') return neurologyNavigationConfig;
+  if (userType === 'orthopedics') return orthopedicsNavigationConfig;
   return genericNavigationConfig;
 };
 
