@@ -25,7 +25,8 @@ import {
   Pill,
   ClipboardList,
   Monitor,
-  UserCheck
+  UserCheck,
+  Target
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import type { UserType } from "@/contexts/AuthContext";

@@ -186,6 +186,97 @@ const integrations: Integration[] = [
     status: 'connected',
     category: 'Patient Monitoring',
     userTypes: ['generic']
+  },
+  // Orthopedics-specific
+  {
+    id: 'pacs-orthopedic',
+    name: 'Orthopedic PACS',
+    description: 'Specialized PACS for bone imaging and templating',
+    icon: Monitor,
+    status: 'connected',
+    category: 'Orthopedic Imaging',
+    userTypes: ['orthopedics']
+  },
+  {
+    id: 'xray-ai',
+    name: 'AI X-ray Analysis',
+    description: 'AI-powered fracture detection and classification',
+    icon: Brain,
+    status: 'connected',
+    category: 'AI Diagnostics',
+    userTypes: ['orthopedics']
+  },
+  {
+    id: 'surgical-planning',
+    name: '3D Surgical Planning',
+    description: 'Advanced 3D templating and surgical planning tools',
+    icon: Monitor,
+    status: 'available',
+    category: 'Surgical Planning',
+    userTypes: ['orthopedics']
+  },
+  {
+    id: 'implant-registry',
+    name: 'Joint Replacement Registry',
+    description: 'Track implants and monitor long-term outcomes',
+    icon: Shield,
+    status: 'connected',
+    category: 'Registry Systems',
+    userTypes: ['orthopedics']
+  },
+  {
+    id: 'dexa-integration',
+    name: 'DEXA Scan Integration',
+    description: 'Bone density measurement and osteoporosis assessment',
+    icon: Activity,
+    status: 'available',
+    category: 'Bone Health',
+    userTypes: ['orthopedics']
+  },
+  {
+    id: 'gait-analysis',
+    name: 'Gait Analysis Systems',
+    description: 'Movement analysis for rehabilitation assessment',
+    icon: Activity,
+    status: 'available',
+    category: 'Rehabilitation',
+    userTypes: ['orthopedics']
+  },
+  {
+    id: 'implant-vendors',
+    name: 'Implant Vendor Networks',
+    description: 'Direct integration with Stryker, DePuy, Zimmer Biomet',
+    icon: Shield,
+    status: 'connected',
+    category: 'Supply Chain',
+    userTypes: ['orthopedics']
+  },
+  {
+    id: 'ndhm-integration',
+    name: 'NDHM/ABHA Integration',
+    description: 'National Digital Health Mission connectivity',
+    icon: Globe,
+    status: 'available',
+    category: 'National Health ID',
+    userTypes: ['orthopedics']
+  },
+  {
+    id: 'rehab-tracking',
+    name: 'Rehabilitation Tracking',
+    description: 'Patient outcome and physiotherapy progress monitoring',
+    icon: Activity,
+    status: 'connected',
+    category: 'Rehabilitation',
+    userTypes: ['orthopedics']
+  },
+  {
+    id: 'wearable-devices',
+    name: 'Wearable Device Integration',
+    description: 'Fitbit, Garmin, and medical wearables for mobility tracking',
+    icon: Smartphone,
+    status: 'available',
+    category: 'Wearables',
+    userTypes: ['orthopedics']
   }
 ];
 

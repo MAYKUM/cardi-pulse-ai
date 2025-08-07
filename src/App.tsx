@@ -105,9 +105,13 @@ function AppRoutes() {
         <Route path="patients/:id" element={<PatientDashboard />} />
         <Route path="imaging" element={<DicomViewer />} />
         <Route path="xray" element={<XrayAnalysis />} />
+        <Route path="3d-viewer" element={<div>3D Bone Viewer</div>} />
         <Route path="surgical-planning" element={<SurgicalPlanning />} />
         <Route path="rehab" element={<RehabTracker />} />
-        <Route path="3d-viewer" element={<div>3D Bone Viewer</div>} />
+        <Route path="fracture-healing" element={<div>Fracture Healing Tracker</div>} />
+        <Route path="osteoporosis" element={<div>Osteoporosis Risk Dashboard</div>} />
+        <Route path="joint-registry" element={<div>Joint Replacement Registry</div>} />
+        <Route path="tele-consult" element={<div>Tele-Ortho Consultation</div>} />
         <Route path="lab" element={<LabResults />} />
         <Route path="appointments" element={<Appointments />} />
         <Route path="appointments/new" element={<NewAppointment />} />
