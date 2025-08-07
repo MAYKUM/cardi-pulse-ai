@@ -6,57 +6,64 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useAuth } from "@/contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 
-const appointments = [
-  {
-    id: "APT001",
-    patient: "Rajesh Kumar",
-    date: "2024-01-15",
-    time: "09:00 AM",
-    duration: 30,
-    type: "virtual",
-    status: "confirmed",
-    reason: "Follow-up consultation",
-    notes: "Post-surgery check-up",
-    phone: "+91 98765 43210"
-  },
-  {
-    id: "APT002", 
-    patient: "Priya Sharma",
-    date: "2024-01-15",
-    time: "10:30 AM",
-    duration: 45,
-    type: "in-person",
-    status: "confirmed",
-    reason: "Initial consultation",
-    notes: "Chest pain evaluation",
-    phone: "+91 87654 32109"
-  },
-  {
-    id: "APT003",
-    patient: "Mohammed Ali",
-    date: "2024-01-15",
-    time: "02:00 PM",
-    duration: 30,
-    type: "virtual",
-    status: "pending",
-    reason: "Device interrogation",
-    notes: "Pacemaker check",
-    phone: "+91 76543 21098"
-  },
-  {
-    id: "APT004",
-    patient: "Sunita Patel",
-    date: "2024-01-16",
-    time: "11:00 AM",
-    duration: 60,
-    type: "in-person",
-    status: "confirmed",
-    reason: "Echo procedure",
-    notes: "Routine echocardiogram",
-    phone: "+91 65432 10987"
+// Generate random appointments for demonstration
+const generateRandomAppointments = () => {
+  const patients = [
+    "Rajesh Kumar", "Priya Sharma", "Mohammed Ali", "Sunita Patel", "David Chen",
+    "Maria Rodriguez", "James Wilson", "Lisa Thompson", "Amit Gupta", "Sarah Connor",
+    "Michael Brown", "Jennifer Lee", "Robert Garcia", "Emily Davis", "John Smith"
+  ];
+  
+  const reasons = {
+    cardio: ["Follow-up", "ECG Review", "Echo Procedure", "Device Check", "Initial Consult"],
+    neurology: ["EEG Analysis", "Seizure Evaluation", "Headache Assessment", "Follow-up", "EMG Study"],
+    generic: ["General Check-up", "Lab Review", "Follow-up", "Vaccination", "Consultation"]
+  };
+
+  const appointments = [];
+  const today = new Date();
+  
+  // Generate appointments for the next 30 days
+  for (let day = 0; day < 30; day++) {
+    const appointmentDate = new Date(today);
+    appointmentDate.setDate(today.getDate() + day);
+    
+    // Skip weekends
+    if (appointmentDate.getDay() === 0 || appointmentDate.getDay() === 6) continue;
+    
+    // Random number of appointments per day (2-6)
+    const appointmentsPerDay = Math.floor(Math.random() * 5) + 2;
+    
+    for (let i = 0; i < appointmentsPerDay; i++) {
+      const hour = 9 + Math.floor(Math.random() * 8); // 9 AM to 4 PM
+      const minute = Math.random() < 0.5 ? 0 : 30;
+      
+      appointments.push({
+        id: `APT${String(day).padStart(2, '0')}${i}`,
+        patient: patients[Math.floor(Math.random() * patients.length)],
+        date: appointmentDate.toISOString().split('T')[0],
+        time: `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`,
+        duration: [30, 45, 60][Math.floor(Math.random() * 3)],
+        type: Math.random() < 0.3 ? "virtual" : "in-person",
+        status: Math.random() < 0.8 ? "confirmed" : Math.random() < 0.5 ? "pending" : "cancelled",
+        reason: reasons.cardio[Math.floor(Math.random() * reasons.cardio.length)],
+        notes: "Routine appointment",
+        phone: `+91 ${Math.floor(Math.random() * 90000) + 10000} ${Math.floor(Math.random() * 90000) + 10000}`
+      });
+    }
   }
-];
+  
+  return appointments.sort((a, b) => {
+    const dateA = new Date(`${a.date} ${a.time}`);
+    const dateB = new Date(`${b.date} ${b.time}`);
+    return dateA.getTime() - dateB.getTime();
+  });
+};
+
+const appointments = generateRandomAppointments();
 
 const timeSlots = [
   "09:00 AM", "09:30 AM", "10:00 AM", "10:30 AM", "11:00 AM", "11:30 AM",
@@ -64,10 +71,14 @@ const timeSlots = [
 ];
 
 export function Appointments() {
-  const [selectedDate, setSelectedDate] = useState("2024-01-15");
+  const today = new Date().toISOString().split('T')[0];
+  const [selectedDate, setSelectedDate] = useState(today);
+  const [currentDate, setCurrentDate] = useState(new Date());
   const [viewMode, setViewMode] = useState<"day" | "week" | "month">("day");
   const [selectedPatient, setSelectedPatient] = useState<string | null>(null);
   const [typeFilter, setTypeFilter] = useState("all");
+  const { user } = useAuth();
+  const navigate = useNavigate();
 
   const getTypeIcon = (type: string) => {
     switch (type) {
@@ -283,7 +294,15 @@ export function Appointments() {
           <h1 className="text-2xl font-bold">Appointments</h1>
           <p className="text-muted-foreground">Manage patient appointments and schedules</p>
         </div>
-        <Button className="bg-primary hover:bg-primary/90">
+        <Button 
+          onClick={() => {
+            const basePath = user?.type === 'cardio' ? '/cardiology' : 
+                           user?.type === 'neurology' ? '/neurology' : 
+                           '/general-medicine';
+            navigate(`${basePath}/appointments/new`);
+          }}
+          className="bg-primary hover:bg-primary/90"
+        >
           <Plus className="h-4 w-4 mr-2" />
           New Appointment
         </Button>
@@ -295,11 +314,45 @@ export function Appointments() {
           <div className="flex flex-col sm:flex-row justify-between gap-4">
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-2">
-                <Button variant="outline" size="sm">
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => {
+                    const newDate = new Date(currentDate);
+                    if (viewMode === "day") {
+                      newDate.setDate(newDate.getDate() - 1);
+                    } else if (viewMode === "week") {
+                      newDate.setDate(newDate.getDate() - 7);
+                    } else {
+                      newDate.setMonth(newDate.getMonth() - 1);
+                    }
+                    setCurrentDate(newDate);
+                    setSelectedDate(newDate.toISOString().split('T')[0]);
+                  }}
+                >
                   <ChevronLeft className="h-4 w-4" />
                 </Button>
-                <span className="font-medium">January 15, 2024</span>
-                <Button variant="outline" size="sm">
+                <span className="font-medium min-w-[200px] text-center">
+                  {viewMode === "day" && currentDate.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+                  {viewMode === "week" && `Week of ${currentDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`}
+                  {viewMode === "month" && currentDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
+                </span>
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => {
+                    const newDate = new Date(currentDate);
+                    if (viewMode === "day") {
+                      newDate.setDate(newDate.getDate() + 1);
+                    } else if (viewMode === "week") {
+                      newDate.setDate(newDate.getDate() + 7);
+                    } else {
+                      newDate.setMonth(newDate.getMonth() + 1);
+                    }
+                    setCurrentDate(newDate);
+                    setSelectedDate(newDate.toISOString().split('T')[0]);
+                  }}
+                >
                   <ChevronRight className="h-4 w-4" />
                 </Button>
               </div>

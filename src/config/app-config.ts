@@ -48,34 +48,34 @@ const cardioNavigationConfig: NavigationGroup[] = [
   {
     title: "Main",
     items: [
-      { name: "Dashboard", href: "/", icon: Heart },
-      { name: "Patients", href: "/patients", icon: Users },
-      { name: "New Patient", href: "/patients/new", icon: UserPlus },
-      { name: "Appointments", href: "/appointments", icon: Calendar, count: 8 },
+      { name: "Dashboard", href: "/cardiology/dashboard", icon: Heart },
+      { name: "Patients", href: "/cardiology/patients", icon: Users },
+      { name: "New Patient", href: "/cardiology/patients/new", icon: UserPlus },
+      { name: "Appointments", href: "/cardiology/appointments", icon: Calendar, count: 8 },
     ]
   },
   {
     title: "Diagnostics & Reports",
     items: [
-      { name: "ECG Analysis", href: "/ecg", icon: Activity, count: 2 },
-      { name: "Echo Reports", href: "/echo", icon: Stethoscope, count: 3 },
-      { name: "Lab Results", href: "/lab", icon: FileText, count: 1 },
-      { name: "DICOM Viewer", href: "/imaging", icon: Camera },
+      { name: "ECG Analysis", href: "/cardiology/ecg", icon: Activity, count: 2 },
+      { name: "Echo Reports", href: "/cardiology/echo", icon: Stethoscope, count: 3 },
+      { name: "Lab Results", href: "/cardiology/lab", icon: FileText, count: 1 },
+      { name: "DICOM Viewer", href: "/cardiology/imaging", icon: Camera },
     ]
   },
   {
     title: "Telecardiology & Integration",
     items: [
-      { name: "Telecardiology", href: "/telehealth", icon: Stethoscope },
-      { name: "Device Integration", href: "/devices", icon: Settings },
-      { name: "Integration Hub", href: "/integrations", icon: Zap },
+      { name: "Telecardiology", href: "/cardiology/telehealth", icon: Stethoscope },
+      { name: "Device Integration", href: "/cardiology/devices", icon: Settings },
+      { name: "Integration Hub", href: "/cardiology/integrations", icon: Zap },
     ]
   },
   {
     title: "Settings & Security",
     items: [
-      { name: "Security", href: "/security", icon: Shield },
-      { name: "Settings", href: "/settings", icon: Settings },
+      { name: "Security", href: "/cardiology/security", icon: Shield },
+      { name: "Settings", href: "/cardiology/settings", icon: Settings },
     ]
   }
 ];
@@ -84,34 +84,34 @@ const genericNavigationConfig: NavigationGroup[] = [
   {
     title: "Main",
     items: [
-      { name: "Dashboard", href: "/", icon: Monitor },
-      { name: "Patients", href: "/patients", icon: Users },
-      { name: "New Patient", href: "/patients/new", icon: UserPlus },
-      { name: "Appointments", href: "/appointments", icon: Calendar, count: 8 },
+      { name: "Dashboard", href: "/general-medicine/dashboard", icon: Monitor },
+      { name: "Patients", href: "/general-medicine/patients", icon: Users },
+      { name: "New Patient", href: "/general-medicine/patients/new", icon: UserPlus },
+      { name: "Appointments", href: "/general-medicine/appointments", icon: Calendar, count: 8 },
     ]
   },
   {
     title: "Diagnostics & Reports",
     items: [
-      { name: "Lab Results", href: "/lab", icon: FileText, count: 1 },
-      { name: "Medical Imaging", href: "/imaging", icon: Camera },
-      { name: "Test Reports", href: "/reports", icon: ClipboardList },
-      { name: "Vital Signs", href: "/vitals", icon: Activity },
+      { name: "Lab Results", href: "/general-medicine/lab", icon: FileText, count: 1 },
+      { name: "Medical Imaging", href: "/general-medicine/imaging", icon: Camera },
+      { name: "Test Reports", href: "/general-medicine/reports", icon: ClipboardList },
+      { name: "Vital Signs", href: "/general-medicine/vitals", icon: Activity },
     ]
   },
   {
     title: "Telemedicine & Integration",
     items: [
-      { name: "Telemedicine", href: "/telehealth", icon: Video },
-      { name: "Device Integration", href: "/devices", icon: Settings },
-      { name: "Integration Hub", href: "/integrations", icon: Zap },
+      { name: "Telemedicine", href: "/general-medicine/telehealth", icon: Video },
+      { name: "Device Integration", href: "/general-medicine/devices", icon: Settings },
+      { name: "Integration Hub", href: "/general-medicine/integrations", icon: Zap },
     ]
   },
   {
     title: "Settings & Security",
     items: [
-      { name: "Security", href: "/security", icon: Shield },
-      { name: "Settings", href: "/settings", icon: Settings },
+      { name: "Security", href: "/general-medicine/security", icon: Shield },
+      { name: "Settings", href: "/general-medicine/settings", icon: Settings },
     ]
   }
 ];
@@ -120,43 +120,43 @@ const neurologyNavigationConfig: NavigationGroup[] = [
   {
     title: "Main",
     items: [
-      { name: "Dashboard", href: "/", icon: Brain },
-      { name: "Patients", href: "/patients", icon: Users },
-      { name: "New Patient", href: "/patients/new", icon: UserPlus },
-      { name: "Appointments", href: "/appointments", icon: Calendar, count: 12 },
+      { name: "Dashboard", href: "/neurology/dashboard", icon: Brain },
+      { name: "Patients", href: "/neurology/patients", icon: Users },
+      { name: "New Patient", href: "/neurology/patients/new", icon: UserPlus },
+      { name: "Appointments", href: "/neurology/appointments", icon: Calendar, count: 12 },
     ]
   },
   {
     title: "Neurological Diagnostics",
     items: [
-      { name: "EEG Analysis", href: "/eeg", icon: Activity, count: 5 },
-      { name: "Video-EEG", href: "/video-eeg", icon: Video, count: 2 },
-      { name: "EMG/NCS Reports", href: "/emg", icon: Zap, count: 3 },
-      { name: "Neuroimaging", href: "/imaging", icon: Camera },
+      { name: "EEG Analysis", href: "/neurology/eeg", icon: Activity, count: 5 },
+      { name: "Video-EEG", href: "/neurology/video-eeg", icon: Video, count: 2 },
+      { name: "EMG/NCS Reports", href: "/neurology/emg", icon: Zap, count: 3 },
+      { name: "Neuroimaging", href: "/neurology/imaging", icon: Camera },
     ]
   },
   {
     title: "Assessment & Monitoring",
     items: [
-      { name: "Neuropsych Tests", href: "/neuropsych", icon: Brain },
-      { name: "Movement Tracking", href: "/movement", icon: Activity },
-      { name: "Lab Results", href: "/lab", icon: FileText, count: 4 },
-      { name: "Seizure Logs", href: "/seizure-logs", icon: ClipboardList },
+      { name: "Neuropsych Tests", href: "/neurology/neuropsych", icon: Brain },
+      { name: "Movement Tracking", href: "/neurology/movement", icon: Activity },
+      { name: "Lab Results", href: "/neurology/lab", icon: FileText, count: 4 },
+      { name: "Seizure Logs", href: "/neurology/seizure-logs", icon: ClipboardList },
     ]
   },
   {
     title: "Tele-Neurology & Integration",
     items: [
-      { name: "Tele-Neurology", href: "/telehealth", icon: Stethoscope },
-      { name: "Device Integration", href: "/devices", icon: Settings },
-      { name: "Integration Hub", href: "/integrations", icon: Zap },
+      { name: "Tele-Neurology", href: "/neurology/telehealth", icon: Stethoscope },
+      { name: "Device Integration", href: "/neurology/devices", icon: Settings },
+      { name: "Integration Hub", href: "/neurology/integrations", icon: Zap },
     ]
   },
   {
     title: "Settings & Security",
     items: [
-      { name: "Security", href: "/security", icon: Shield },
-      { name: "Settings", href: "/settings", icon: Settings },
+      { name: "Security", href: "/neurology/security", icon: Shield },
+      { name: "Settings", href: "/neurology/settings", icon: Settings },
     ]
   }
 ];
