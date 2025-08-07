@@ -1,5 +1,4 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 export type UserType = 'cardio' | 'generic' | 'neurology';
 
@@ -54,18 +53,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     
     setUser(userData);
     localStorage.setItem('medical_app_user', JSON.stringify(userData));
-    
-    // Navigate to specialty-specific route
-    const route = userType === 'cardio' ? '/cardiology' : 
-                  userType === 'neurology' ? '/neurology' : 
-                  '/general-medicine';
-    window.location.href = route;
   };
 
   const logout = () => {
     setUser(null);
     localStorage.removeItem('medical_app_user');
-    window.location.href = '/';
   };
 
   return (
