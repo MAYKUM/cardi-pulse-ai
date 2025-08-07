@@ -20,6 +20,9 @@ import { IntegrationsHub } from "./components/IntegrationsHub";
 import { EEGAnalysis } from "./components/EEGAnalysis";
 import { VideoEEG } from "./components/VideoEEG";
 import { EMGPanel } from "./components/EMGPanel";
+import { XrayAnalysis } from "./components/XrayAnalysis";
+import { SurgicalPlanning } from "./components/SurgicalPlanning";
+import { RehabTracker } from "./components/RehabTracker";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import { PatientsList } from "./components/PatientsList";
@@ -94,6 +97,24 @@ function AppRoutes() {
         <Route path="emergency" element={<div>Emergency Procedures</div>} />
       </Route>
       
+      <Route path="/orthopedics" element={<AppShell />}>
+        <Route index element={<EnhancedDashboard />} />
+        <Route path="dashboard" element={<EnhancedDashboard />} />
+        <Route path="patients" element={<PatientsList />} />
+        <Route path="patients/new" element={<PatientIntakeForm />} />
+        <Route path="patients/:id" element={<PatientDashboard />} />
+        <Route path="imaging" element={<DicomViewer />} />
+        <Route path="xray" element={<XrayAnalysis />} />
+        <Route path="surgical-planning" element={<SurgicalPlanning />} />
+        <Route path="rehab" element={<RehabTracker />} />
+        <Route path="3d-viewer" element={<div>3D Bone Viewer</div>} />
+        <Route path="lab" element={<LabResults />} />
+        <Route path="appointments" element={<Appointments />} />
+        <Route path="appointments/new" element={<NewAppointment />} />
+        <Route path="integrations" element={<IntegrationsHub />} />
+        <Route path="settings" element={<div>Orthopedics Settings</div>} />
+      </Route>
+      
       <Route path="/general-medicine" element={<AppShell />}>
         <Route index element={<EnhancedDashboard />} />
         <Route path="dashboard" element={<EnhancedDashboard />} />
@@ -118,7 +139,7 @@ function AppRoutes() {
       </Route>
       
       {/* Legacy routes - redirect to specialty-specific routes */}
-      <Route path="/" element={<Navigate to={`/${user.type === 'cardio' ? 'cardiology' : user.type === 'neurology' ? 'neurology' : 'general-medicine'}`} replace />} />
+      <Route path="/" element={<Navigate to={`/${user.type === 'cardio' ? 'cardiology' : user.type === 'neurology' ? 'neurology' : user.type === 'orthopedics' ? 'orthopedics' : 'general-medicine'}`} replace />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
