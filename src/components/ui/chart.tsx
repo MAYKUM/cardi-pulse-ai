@@ -74,25 +74,37 @@ const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
     return null
   }
 
-  return (
-    <style
-      dangerouslySetInnerHTML={{
-        __html: Object.entries(THEMES)
-          .map(
-            ([theme, prefix]) => `
-${prefix} [data-chart=${id}] {
+  // Sanitize the CSS content to prevent XSS
+  const sanitizeCSS = (css: string) => {
+    // Remove potentially dangerous characters and patterns
+    return css
+      .replace(/[<>'"]/g, '') // Remove HTML characters
+      .replace(/javascript:/gi, '') // Remove javascript: protocol
+      .replace(/expression\(/gi, '') // Remove CSS expressions
+      .replace(/url\(/gi, ''); // Remove url() functions for safety
+  };
+
+  const cssContent = Object.entries(THEMES)
+    .map(
+      ([theme, prefix]) => `
+${prefix} [data-chart=${sanitizeCSS(id)}] {
 ${colorConfig
   .map(([key, itemConfig]) => {
     const color =
       itemConfig.theme?.[theme as keyof typeof itemConfig.theme] ||
       itemConfig.color
-    return color ? `  --color-${key}: ${color};` : null
+    return color ? `  --color-${key}: ${sanitizeCSS(color)};` : null
   })
   .join("\n")}
 }
 `
-          )
-          .join("\n"),
+    )
+    .join("\n");
+
+  return (
+    <style
+      dangerouslySetInnerHTML={{
+        __html: cssContent
       }}
     />
   )

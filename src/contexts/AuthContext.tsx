@@ -38,12 +38,36 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     // Check for existing session in localStorage
     const savedUser = localStorage.getItem('medical_app_user');
     if (savedUser) {
-      setUser(JSON.parse(savedUser));
+      try {
+        const parsedUser = JSON.parse(savedUser);
+        // Validate the user object structure
+        if (parsedUser && 
+            typeof parsedUser.id === 'string' && 
+            typeof parsedUser.name === 'string' && 
+            typeof parsedUser.type === 'string' && 
+            typeof parsedUser.email === 'string' &&
+            ['cardio', 'generic', 'neurology', 'orthopedics'].includes(parsedUser.type)) {
+          setUser(parsedUser);
+        } else {
+          // Invalid user data, clear localStorage
+          localStorage.removeItem('medical_app_user');
+        }
+      } catch (error) {
+        // Invalid JSON, clear localStorage
+        console.error('Invalid user data in localStorage:', error);
+        localStorage.removeItem('medical_app_user');
+      }
     }
     setIsLoading(false);
   }, []);
 
   const login = (userType: UserType) => {
+    // Validate input
+    if (!['cardio', 'generic', 'neurology', 'orthopedics'].includes(userType)) {
+      console.error('Invalid user type:', userType);
+      return;
+    }
+
     const userData: User = {
       id: userType === 'cardio' ? 'cardio-001' : 
           userType === 'neurology' ? 'neuro-001' : 
@@ -58,7 +82,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     };
     
     setUser(userData);
-    localStorage.setItem('medical_app_user', JSON.stringify(userData));
+    try {
+      localStorage.setItem('medical_app_user', JSON.stringify(userData));
+    } catch (error) {
+      console.error('Failed to save user data to localStorage:', error);
+    }
   };
 
   const logout = () => {
