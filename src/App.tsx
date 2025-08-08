@@ -27,6 +27,8 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import { PatientsList } from "./components/PatientsList";
 import { NewAppointment } from "./components/NewAppointment";
+import LoginRole from "./pages/auth/LoginRole";
+import Signup from "./pages/auth/Signup";
 
 const queryClient = new QueryClient();
 
@@ -42,7 +44,19 @@ function AppRoutes() {
   }
 
   if (!user) {
-    return <LoginPage />;
+    return (
+      <Routes>
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/login">
+          <Route path="cardiology" element={<LoginRole />} />
+          <Route path="neurology" element={<LoginRole />} />
+          <Route path="general-medicine" element={<LoginRole />} />
+          <Route path=":role" element={<LoginRole />} />
+        </Route>
+        <Route path="/" element={<Navigate to="/login/general-medicine" replace />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    );
   }
 
   return (
@@ -140,6 +154,13 @@ function AppRoutes() {
         <Route path="search" element={<div>Quick Search</div>} />
         <Route path="ai-analysis" element={<div>AI Analysis</div>} />
         <Route path="emergency" element={<div>Emergency Procedures</div>} />
+      </Route>
+      
+      {/* Dashboard role entry points */}
+      <Route path="/dashboard">
+        <Route path="cardiology" element={<Navigate to="/cardiology/dashboard" replace />} />
+        <Route path="neurology" element={<Navigate to="/neurology/dashboard" replace />} />
+        <Route path="general" element={<Navigate to="/general-medicine/dashboard" replace />} />
       </Route>
       
       {/* Legacy routes - redirect to specialty-specific routes */}

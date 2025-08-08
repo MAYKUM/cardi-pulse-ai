@@ -14,16 +14,80 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      doctors: {
+        Row: {
+          created_at: string
+          id: string
+          name: string | null
+          profile_data: Json
+          specialty: Database["public"]["Enums"]["medical_specialty"]
+        }
+        Insert: {
+          created_at?: string
+          id: string
+          name?: string | null
+          profile_data?: Json
+          specialty: Database["public"]["Enums"]["medical_specialty"]
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string | null
+          profile_data?: Json
+          specialty?: Database["public"]["Enums"]["medical_specialty"]
+        }
+        Relationships: []
+      }
+      patients: {
+        Row: {
+          age: number | null
+          created_at: string
+          doctor_id: string
+          gender: string | null
+          id: string
+          medical_history: Json
+          name: string
+        }
+        Insert: {
+          age?: number | null
+          created_at?: string
+          doctor_id: string
+          gender?: string | null
+          id?: string
+          medical_history?: Json
+          name: string
+        }
+        Update: {
+          age?: number | null
+          created_at?: string
+          doctor_id?: string
+          gender?: string | null
+          id?: string
+          medical_history?: Json
+          name?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "patients_doctor_id_fkey"
+            columns: ["doctor_id"]
+            isOneToOne: false
+            referencedRelation: "doctors"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      seed_patients_for_current_user: {
+        Args: { p_specialty: Database["public"]["Enums"]["medical_specialty"] }
+        Returns: undefined
+      }
     }
     Enums: {
-      [_ in never]: never
+      medical_specialty: "cardiology" | "neurology" | "general_medicine"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +214,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      medical_specialty: ["cardiology", "neurology", "general_medicine"],
+    },
   },
 } as const
