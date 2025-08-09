@@ -1,4 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { supabase } from "@/integrations/supabase/client";
+import type { Session } from "@supabase/supabase-js";
 
 export type UserType = 'cardio' | 'generic' | 'neurology' | 'orthopedics';
 
@@ -35,63 +37,80 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Check for existing session in localStorage
-    const savedUser = localStorage.getItem('medical_app_user');
-    if (savedUser) {
-      try {
-        const parsedUser = JSON.parse(savedUser);
-        // Validate the user object structure
-        if (parsedUser && 
-            typeof parsedUser.id === 'string' && 
-            typeof parsedUser.name === 'string' && 
-            typeof parsedUser.type === 'string' && 
-            typeof parsedUser.email === 'string' &&
-            ['cardio', 'generic', 'neurology', 'orthopedics'].includes(parsedUser.type)) {
-          setUser(parsedUser);
-        } else {
-          // Invalid user data, clear localStorage
-          localStorage.removeItem('medical_app_user');
-        }
-      } catch (error) {
-        // Invalid JSON, clear localStorage
-        console.error('Invalid user data in localStorage:', error);
-        localStorage.removeItem('medical_app_user');
+    // Set up auth state listener FIRST
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (session?.user) {
+        const sUser = session.user;
+        const baseUser: User = {
+          id: sUser.id,
+          name: (sUser.user_metadata?.full_name as string) || (sUser.email?.split("@")[0] ?? "Clinician"),
+          type: 'generic',
+          email: sUser.email ?? ''
+        };
+        setUser(baseUser);
+
+        // Defer Supabase calls to avoid deadlocks
+        setTimeout(async () => {
+          const { data, error } = await supabase
+            .from('doctors')
+            .select('specialty')
+            .eq('id', sUser.id)
+            .maybeSingle();
+          if (!error && data?.specialty) {
+            const spec = data.specialty as string;
+            const mapped: UserType = spec === 'cardiology' ? 'cardio' : spec === 'neurology' ? 'neurology' : spec === 'general_medicine' ? 'generic' : 'generic';
+            setUser(prev => prev ? { ...prev, type: mapped } : prev);
+          }
+        }, 0);
+      } else {
+        setUser(null);
       }
-    }
-    setIsLoading(false);
+      setIsLoading(false);
+    });
+
+    // THEN check for existing session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session?.user) {
+        const sUser = session.user;
+        const baseUser: User = {
+          id: sUser.id,
+          name: (sUser.user_metadata?.full_name as string) || (sUser.email?.split("@")[0] ?? "Clinician"),
+          type: 'generic',
+          email: sUser.email ?? ''
+        };
+        setUser(baseUser);
+
+        setTimeout(async () => {
+          const { data, error } = await supabase
+            .from('doctors')
+            .select('specialty')
+            .eq('id', sUser.id)
+            .maybeSingle();
+          if (!error && data?.specialty) {
+            const spec = data.specialty as string;
+            const mapped: UserType = spec === 'cardiology' ? 'cardio' : spec === 'neurology' ? 'neurology' : spec === 'general_medicine' ? 'generic' : 'generic';
+            setUser(prev => prev ? { ...prev, type: mapped } : prev);
+          }
+        }, 0);
+      } else {
+        setUser(null);
+      }
+      setIsLoading(false);
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
   }, []);
 
   const login = (userType: UserType) => {
-    // Validate input
-    if (!['cardio', 'generic', 'neurology', 'orthopedics'].includes(userType)) {
-      console.error('Invalid user type:', userType);
-      return;
-    }
-
-    const userData: User = {
-      id: userType === 'cardio' ? 'cardio-001' : 
-          userType === 'neurology' ? 'neuro-001' : 
-          userType === 'orthopedics' ? 'ortho-001' : 'generic-001',
-      name: userType === 'cardio' ? 'Dr. Cardio' : 
-            userType === 'neurology' ? 'Dr. Neurologist' : 
-            userType === 'orthopedics' ? 'Dr. Orthopedic' : 'Dr. Generic',
-      type: userType,
-      email: userType === 'cardio' ? 'cardio@hospital.com' : 
-             userType === 'neurology' ? 'neuro@hospital.com' : 
-             userType === 'orthopedics' ? 'ortho@hospital.com' : 'generic@hospital.com'
-    };
-    
-    setUser(userData);
-    try {
-      localStorage.setItem('medical_app_user', JSON.stringify(userData));
-    } catch (error) {
-      console.error('Failed to save user data to localStorage:', error);
-    }
+    const route = userType === 'cardio' ? 'cardiology' : userType === 'neurology' ? 'neurology' : userType === 'orthopedics' ? 'orthopedics' : 'general-medicine';
+    window.location.assign(`/login/${route}`);
   };
 
   const logout = () => {
+    supabase.auth.signOut();
     setUser(null);
-    localStorage.removeItem('medical_app_user');
   };
 
   return (

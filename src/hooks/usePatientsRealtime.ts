@@ -45,9 +45,8 @@ export function usePatientsRealtime() {
 
       channel = supabase
         .channel("patients-realtime")
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'patients' }, (payload: any) => {
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'patients', filter: `doctor_id=eq.${uid}` }, (payload: any) => {
           const row = payload.new ?? payload.old;
-          if (!row || row.doctor_id !== uid) return;
           setPatients((prev) => {
             switch (payload.eventType) {
               case 'INSERT':

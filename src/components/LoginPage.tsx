@@ -3,19 +3,19 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Heart, Stethoscope, LogIn, Brain } from 'lucide-react';
-import { useAuth } from '@/contexts/AuthContext';
 import type { UserType } from '@/contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 export const LoginPage: React.FC = () => {
-  const { login } = useAuth();
+  const navigate = useNavigate();
   const [selectedSpecialty, setSelectedSpecialty] = useState<UserType | ''>('');
 
   const handleLogin = () => {
     if (selectedSpecialty) {
-      login(selectedSpecialty);
+      const route = selectedSpecialty === 'cardio' ? 'cardiology' : selectedSpecialty === 'neurology' ? 'neurology' : selectedSpecialty === 'orthopedics' ? 'orthopedics' : 'general-medicine';
+      navigate(`/login/${route}`);
     }
   };
-
   return (
     <div className="min-h-screen flex items-center justify-center bg-background p-4">
       <div className="w-full max-w-md space-y-6">
