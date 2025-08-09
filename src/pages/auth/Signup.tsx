@@ -1,11 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { useSEO } from "@/hooks/useSEO";
 
 export default function Signup() {
   const { toast } = useToast();
@@ -13,11 +12,9 @@ export default function Signup() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  useSEO({
-    title: "Sign Up | AI Medical Portal",
-    description: "Create your account for the AI Medical Portal.",
-    canonicalUrl: `${window.location.origin}/signup`,
-  });
+  useEffect(() => {
+    document.title = "Sign Up | AI Medical Portal";
+  }, []);
 
   const handleSignUp = async () => {
     setLoading(true);
