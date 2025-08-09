@@ -76,6 +76,27 @@ export type Database = {
           },
         ]
       }
+      seed_activity: {
+        Row: {
+          day: string
+          last_seed_at: string
+          seeds_today: number
+          user_id: string
+        }
+        Insert: {
+          day?: string
+          last_seed_at?: string
+          seeds_today?: number
+          user_id: string
+        }
+        Update: {
+          day?: string
+          last_seed_at?: string
+          seeds_today?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -83,6 +104,10 @@ export type Database = {
     Functions: {
       seed_patients_for_current_user: {
         Args: { p_specialty: Database["public"]["Enums"]["medical_specialty"] }
+        Returns: undefined
+      }
+      seed_patients_rate_limited: {
+        Args: { p_specialty: string }
         Returns: undefined
       }
     }
