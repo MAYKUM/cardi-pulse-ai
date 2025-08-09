@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
-import { signInWithPassword, signInWithGoogle } from "@/services/auth";
+import { supabase } from "@/integrations/supabase/client";
 import { ensureDoctorProfile, fetchDoctorProfile, seedPatientsForSpecialty, Specialty } from "@/hooks/useDoctorProfile";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -35,7 +35,8 @@ export default function LoginRole() {
   const handleLogin = async () => {
     setLoading(true);
     try {
-      await signInWithPassword(email, password);
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) throw error;
 
       // Verify or create doctor profile
       const existing = await fetchDoctorProfile();
@@ -60,7 +61,10 @@ export default function LoginRole() {
   };
 
   const handleGoogle = async () => {
-    await signInWithGoogle(roleKey);
+    await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: { redirectTo: `${window.location.origin}/login/${roleKey}` }
+    });
   };
 
   return (
