@@ -162,6 +162,17 @@ function AppRoutes() {
         <Route path="neurology" element={<Navigate to="/neurology/dashboard" replace />} />
         <Route path="general" element={<Navigate to="/general-medicine/dashboard" replace />} />
       </Route>
+
+      {/* If an authenticated user hits any /login/* URL, redirect them to their home */}
+      <Route
+        path="/login/*"
+        element={
+          <Navigate
+            to={`/${user.type === 'cardio' ? 'cardiology' : user.type === 'neurology' ? 'neurology' : user.type === 'orthopedics' ? 'orthopedics' : 'general-medicine'}`}
+            replace
+          />
+        }
+      />
       
       {/* Legacy routes - redirect to specialty-specific routes */}
       <Route path="/" element={<Navigate to={`/${user.type === 'cardio' ? 'cardiology' : user.type === 'neurology' ? 'neurology' : user.type === 'orthopedics' ? 'orthopedics' : 'general-medicine'}`} replace />} />
