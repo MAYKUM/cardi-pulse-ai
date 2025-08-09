@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,6 +8,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { signInWithPassword, signInWithGoogle } from "@/services/auth";
 import { ensureDoctorProfile, fetchDoctorProfile, seedPatientsForSpecialty, Specialty } from "@/hooks/useDoctorProfile";
 import { useAuth } from "@/contexts/AuthContext";
+import { useSEO } from "@/hooks/useSEO";
 
 const roleMap: Record<string, { specialty: Specialty; label: string; dashboard: string; userType: 'cardio' | 'neurology' | 'orthopedics' | 'generic' }> = {
   cardiology: { specialty: "cardiology", label: "Cardiology", dashboard: "/dashboard/cardiology", userType: 'cardio' },
@@ -28,9 +29,7 @@ export default function LoginRole() {
   const roleKey = useMemo(() => (roleParam ?? "general-medicine").toLowerCase(), [roleParam]);
   const roleCfg = roleMap[roleKey] ?? roleMap["general-medicine"];
 
-  useEffect(() => {
-    document.title = `${roleCfg.label} Login | AI Medical Portal`;
-  }, [roleCfg.label]);
+  useSEO({ title: `${roleCfg.label} Login | AI Medical Portal`, description: `Sign in to the ${roleCfg.label} portal.` , canonicalUrl: `${window.location.origin}/login/${roleKey}` });
 
   const handleLogin = async () => {
     setLoading(true);

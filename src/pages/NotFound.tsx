@@ -1,5 +1,6 @@
 import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
+import { useSEO } from "@/hooks/useSEO";
 
 const NotFound = () => {
   const location = useLocation();
@@ -10,6 +11,12 @@ const NotFound = () => {
       location.pathname
     );
   }, [location.pathname]);
+
+  useSEO({
+    title: "404 Not Found | AI Medical Portal",
+    description: "Page not found.",
+    canonicalUrl: `${window.location.origin}${location.pathname}`,
+  });
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">

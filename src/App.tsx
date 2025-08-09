@@ -3,32 +3,33 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { lazy, Suspense } from "react";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import { AppShell } from "./components/AppShell";
-import { LoginPage } from "./components/LoginPage";
-import { PatientDashboard } from "./components/PatientDashboard";
-import { EnhancedDashboard } from "./components/EnhancedDashboard";
-import { PatientIntakeForm } from "./components/PatientIntakeForm";
-import { DicomViewer } from "./components/DicomViewer";
-import { EcgAnalysis } from "./components/EcgAnalysis";
-import { EchoReports } from "./components/EchoReports";
-import { LabResults } from "./components/LabResults";
-import { Telecardiology } from "./components/Telecardiology";
-import { DeviceIntegration } from "./components/DeviceIntegration";
-import { Appointments } from "./components/Appointments";
-import { IntegrationsHub } from "./components/IntegrationsHub";
-import { EEGAnalysis } from "./components/EEGAnalysis";
-import { VideoEEG } from "./components/VideoEEG";
-import { EMGPanel } from "./components/EMGPanel";
-import { XrayAnalysis } from "./components/XrayAnalysis";
-import { SurgicalPlanning } from "./components/SurgicalPlanning";
-import { RehabTracker } from "./components/RehabTracker";
-import Index from "./pages/Index";
-import NotFound from "./pages/NotFound";
-import { PatientsList } from "./components/PatientsList";
-import { NewAppointment } from "./components/NewAppointment";
-import LoginRole from "./pages/auth/LoginRole";
-import Signup from "./pages/auth/Signup";
+
+const EnhancedDashboard = lazy(() => import("./components/EnhancedDashboard").then(m => ({ default: m.EnhancedDashboard })));
+const PatientDashboard = lazy(() => import("./components/PatientDashboard").then(m => ({ default: m.PatientDashboard })));
+const PatientIntakeForm = lazy(() => import("./components/PatientIntakeForm").then(m => ({ default: m.PatientIntakeForm })));
+const DicomViewer = lazy(() => import("./components/DicomViewer").then(m => ({ default: m.DicomViewer })));
+const EcgAnalysis = lazy(() => import("./components/EcgAnalysis").then(m => ({ default: m.EcgAnalysis })));
+const EchoReports = lazy(() => import("./components/EchoReports").then(m => ({ default: m.EchoReports })));
+const LabResults = lazy(() => import("./components/LabResults").then(m => ({ default: m.LabResults })));
+const Telecardiology = lazy(() => import("./components/Telecardiology").then(m => ({ default: m.Telecardiology })));
+const DeviceIntegration = lazy(() => import("./components/DeviceIntegration").then(m => ({ default: m.DeviceIntegration })));
+const Appointments = lazy(() => import("./components/Appointments").then(m => ({ default: m.Appointments })));
+const IntegrationsHub = lazy(() => import("./components/IntegrationsHub").then(m => ({ default: m.IntegrationsHub })));
+const EEGAnalysis = lazy(() => import("./components/EEGAnalysis").then(m => ({ default: m.EEGAnalysis })));
+const VideoEEG = lazy(() => import("./components/VideoEEG").then(m => ({ default: m.VideoEEG })));
+const EMGPanel = lazy(() => import("./components/EMGPanel").then(m => ({ default: m.EMGPanel })));
+const XrayAnalysis = lazy(() => import("./components/XrayAnalysis").then(m => ({ default: m.XrayAnalysis })));
+const SurgicalPlanning = lazy(() => import("./components/SurgicalPlanning").then(m => ({ default: m.SurgicalPlanning })));
+const RehabTracker = lazy(() => import("./components/RehabTracker").then(m => ({ default: m.RehabTracker })));
+const PatientsList = lazy(() => import("./components/PatientsList").then(m => ({ default: m.PatientsList })));
+const NewAppointment = lazy(() => import("./components/NewAppointment").then(m => ({ default: m.NewAppointment })));
+
+const LoginRole = lazy(() => import("./pages/auth/LoginRole"));
+const Signup = lazy(() => import("./pages/auth/Signup"));
+const NotFound = lazy(() => import("./pages/NotFound"));
 
 const queryClient = new QueryClient();
 
@@ -45,17 +46,19 @@ function AppRoutes() {
 
   if (!user) {
     return (
-      <Routes>
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/login">
-          <Route path="cardiology" element={<LoginRole />} />
-          <Route path="neurology" element={<LoginRole />} />
-          <Route path="general-medicine" element={<LoginRole />} />
-          <Route path=":role" element={<LoginRole />} />
-        </Route>
-        <Route path="/" element={<Navigate to="/login/general-medicine" replace />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
+      <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div></div>}>
+        <Routes>
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/login">
+            <Route path="cardiology" element={<LoginRole />} />
+            <Route path="neurology" element={<LoginRole />} />
+            <Route path="general-medicine" element={<LoginRole />} />
+            <Route path=":role" element={<LoginRole />} />
+          </Route>
+          <Route path="/" element={<Navigate to="/login/general-medicine" replace />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </Suspense>
     );
   }
 
