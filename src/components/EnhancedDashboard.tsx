@@ -25,7 +25,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { 
   getDashboardCardsConfig,
-  quickActionsConfig,
+  getQuickActionsConfig,
   patientTableColumns,
   recentPatientsData,
   todayScheduleConfig
@@ -37,6 +37,7 @@ export function EnhancedDashboard() {
   const navigate = useNavigate();
   const { user } = useAuth();
   const dashboardCardsConfig = getDashboardCardsConfig(user?.type || 'generic');
+  const quickActions = getQuickActionsConfig(user?.type || 'generic');
 
   const getStatusBadgeVariant = (status: string) => {
     switch (status) {
@@ -175,7 +176,7 @@ export function EnhancedDashboard() {
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-2 gap-3">
-                {quickActionsConfig.map((action, index) => (
+                {quickActions.map((action, index) => (
                   <Button
                     key={index}
                     variant="outline"

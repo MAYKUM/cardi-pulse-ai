@@ -359,50 +359,60 @@ export interface QuickAction {
   color: string;
 }
 
-export const quickActionsConfig: QuickAction[] = [
-  {
-    title: "New Patient",
-    description: "Register new patient",
-    href: "/patients/new",
-    icon: UserPlus,
-    color: "bg-primary-soft text-primary"
-  },
-  {
-    title: "Upload Images",
-    description: "DICOM & medical imaging",
-    href: "/upload",
-    icon: Upload,
-    color: "bg-accent-soft text-accent"
-  },
-  {
-    title: "Quick Search",
-    description: "Find patients/cases",
-    href: "/search",
-    icon: Search,
-    color: "bg-success-soft text-success"
-  },
-  {
-    title: "Schedule",
-    description: "New appointment",
-    href: "/appointments/new",
-    icon: Calendar,
-    color: "bg-warning-soft text-warning"
-  },
-  {
-    title: "AI Analysis",
-    description: "Quick AI chat interface",
-    href: "/ai-analysis",
-    icon: Zap,
-    color: "bg-gradient-to-br from-primary to-accent text-primary-foreground"
-  },
-  {
-    title: "Emergency",
-    description: "Critical procedures",
-    href: "/emergency",
-    icon: AlertTriangle,
-    color: "bg-critical-soft text-critical"
-  }
-];
+export const getQuickActionsConfig = (userType: UserType): QuickAction[] => {
+  const basePath = userType === 'cardio'
+    ? '/cardiology'
+    : userType === 'neurology'
+    ? '/neurology'
+    : userType === 'orthopedics'
+    ? '/orthopedics'
+    : '/general-medicine';
+
+  return [
+    {
+      title: "New Patient",
+      description: "Register new patient",
+      href: `${basePath}/patients/new`,
+      icon: UserPlus,
+      color: "bg-primary-soft text-primary"
+    },
+    {
+      title: "Upload Images",
+      description: "DICOM & medical imaging",
+      href: `${basePath}/upload`,
+      icon: Upload,
+      color: "bg-accent-soft text-accent"
+    },
+    {
+      title: "Quick Search",
+      description: "Find patients/cases",
+      href: `${basePath}/search`,
+      icon: Search,
+      color: "bg-success-soft text-success"
+    },
+    {
+      title: "Schedule",
+      description: "New appointment",
+      href: `${basePath}/appointments/new`,
+      icon: Calendar,
+      color: "bg-warning-soft text-warning"
+    },
+    {
+      title: "AI Analysis",
+      description: "Quick AI chat interface",
+      href: `${basePath}/ai-analysis`,
+      icon: Zap,
+      color: "bg-gradient-to-br from-primary to-accent text-primary-foreground"
+    },
+    {
+      title: "Emergency",
+      description: "Critical procedures",
+      href: `${basePath}/emergency`,
+      icon: AlertTriangle,
+      color: "bg-critical-soft text-critical"
+    }
+  ];
+};
 
 // Recent Patients Table Configuration
 export interface TableColumn {
