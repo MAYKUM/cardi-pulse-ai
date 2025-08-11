@@ -29,6 +29,7 @@ import { PatientsList } from "./components/PatientsList";
 import { NewAppointment } from "./components/NewAppointment";
 import LoginRole from "./pages/auth/LoginRole";
 import Signup from "./pages/auth/Signup";
+import AIAnalysisChat from "./components/AIAnalysisChat";
 
 const queryClient = new QueryClient();
 
@@ -80,7 +81,7 @@ function AppRoutes() {
         <Route path="settings" element={<div>Settings</div>} />
         <Route path="upload" element={<div>Upload Images</div>} />
         <Route path="search" element={<div>Quick Search</div>} />
-        <Route path="ai-analysis" element={<div>AI Analysis</div>} />
+        <Route path="ai-analysis" element={<AIAnalysisChat specialty="cardiology" />} />
         <Route path="emergency" element={<div>Emergency Procedures</div>} />
       </Route>
       
@@ -107,7 +108,7 @@ function AppRoutes() {
         <Route path="settings" element={<div>Settings</div>} />
         <Route path="upload" element={<div>Upload Images</div>} />
         <Route path="search" element={<div>Quick Search</div>} />
-        <Route path="ai-analysis" element={<div>AI Analysis</div>} />
+        <Route path="ai-analysis" element={<AIAnalysisChat specialty="neurology" />} />
         <Route path="emergency" element={<div>Emergency Procedures</div>} />
       </Route>
       
@@ -152,7 +153,7 @@ function AppRoutes() {
         <Route path="settings" element={<div>Settings</div>} />
         <Route path="upload" element={<div>Upload Images</div>} />
         <Route path="search" element={<div>Quick Search</div>} />
-        <Route path="ai-analysis" element={<div>AI Analysis</div>} />
+        <Route path="ai-analysis" element={<AIAnalysisChat specialty="general-medicine" />} />
         <Route path="emergency" element={<div>Emergency Procedures</div>} />
       </Route>
       
