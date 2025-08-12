@@ -112,7 +112,11 @@ export type Database = {
       }
     }
     Enums: {
-      medical_specialty: "cardiology" | "neurology" | "general_medicine"
+      medical_specialty:
+        | "cardiology"
+        | "neurology"
+        | "general_medicine"
+        | "ophthalmology"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -240,7 +244,12 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      medical_specialty: ["cardiology", "neurology", "general_medicine"],
+      medical_specialty: [
+        "cardiology",
+        "neurology",
+        "general_medicine",
+        "ophthalmology",
+      ],
     },
   },
 } as const
