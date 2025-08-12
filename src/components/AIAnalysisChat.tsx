@@ -9,7 +9,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { cn } from "@/lib/utils";
 
 interface AIAnalysisChatProps {
-  specialty: "cardiology" | "neurology" | "general-medicine";
+  specialty: "cardiology" | "neurology" | "general-medicine" | "ophthalmology";
 }
 
 interface ChatMessage {
@@ -38,18 +38,26 @@ const suggestions: Record<AIAnalysisChatProps["specialty"], string[]> = {
     "Thyroid nodule evaluation basics",
     "Vaccination catch-up for adult",
   ],
+  ophthalmology: [
+    "Glaucoma risk assessment from IOP and OCT RNFL",
+    "Cataract surgery workup and IOL selection basics",
+    "Diabetic retinopathy screening thresholds",
+    "Red eye differential: urgent vs routine",
+  ],
 };
 
 const titles: Record<AIAnalysisChatProps["specialty"], string> = {
   cardiology: "Cardiology AI Analysis",
   neurology: "Neurology AI Analysis",
   "general-medicine": "General Medicine AI Analysis",
+  ophthalmology: "Ophthalmology AI Analysis",
 };
 
 const descriptions: Record<AIAnalysisChatProps["specialty"], string> = {
   cardiology: "Ask cardiology-focused questions and get guideline-aware answers.",
   neurology: "Ask neurology-focused questions with careful localization & red flags.",
   "general-medicine": "Primary care guidance for assessment, workup, and management.",
+  ophthalmology: "Ophthalmology-focused guidance for imaging, screening, and management.",
 };
 
 export default function AIAnalysisChat({ specialty }: AIAnalysisChatProps) {
