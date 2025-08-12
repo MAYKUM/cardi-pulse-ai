@@ -30,6 +30,7 @@ import {
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import type { UserType } from "@/contexts/AuthContext";
+import { ophthalmologyNavigationConfig } from "./ophthalmology-nav";
 
 // Navigation Configuration
 export interface NavigationGroup {
@@ -204,6 +205,7 @@ export const getNavigationConfig = (userType: UserType): NavigationGroup[] => {
   if (userType === 'cardio') return cardioNavigationConfig;
   if (userType === 'neurology') return neurologyNavigationConfig;
   if (userType === 'orthopedics') return orthopedicsNavigationConfig;
+  if (userType === 'ophthalmology') return ophthalmologyNavigationConfig;
   return genericNavigationConfig;
 };
 
@@ -238,6 +240,7 @@ export const getHeaderActionsConfig = (userType: UserType): HeaderAction[] => [
     type: "tooltip",
     tooltip: userType === 'cardio' ? "Dr. Cardio - Cardiologist" : 
              userType === 'neurology' ? "Dr. Neurologist - Neurologist" : 
+             userType === 'ophthalmology' ? "Dr. Ophthalmologist - Ophthalmology" :
              "Dr. Generic - Physician"
   }
 ];
@@ -344,9 +347,41 @@ const neurologyDashboardCards: DashboardCard[] = [
   }
 ];
 
+const ophthalmologyDashboardCards: DashboardCard[] = [
+  {
+    title: "Total Patients",
+    value: 2110,
+    delta: "+10 this week",
+    icon: Users,
+    color: "text-primary"
+  },
+  {
+    title: "Imaging Pending",
+    value: 7,
+    delta: "Today",
+    icon: Camera,
+    color: "text-warning"
+  },
+  {
+    title: "High IOP Alerts",
+    value: 3,
+    delta: "Needs review",
+    icon: AlertTriangle,
+    color: "text-critical"
+  },
+  {
+    title: "Surgery Schedule",
+    value: 5,
+    delta: "Next 48h",
+    icon: Calendar,
+    color: "text-accent"
+  }
+];
+
 export const getDashboardCardsConfig = (userType: UserType): DashboardCard[] => {
   if (userType === 'cardio') return cardioDashboardCards;
   if (userType === 'neurology') return neurologyDashboardCards;
+  if (userType === 'ophthalmology') return ophthalmologyDashboardCards;
   return genericDashboardCards;
 };
 
@@ -366,6 +401,8 @@ export const getQuickActionsConfig = (userType: UserType): QuickAction[] => {
     ? '/neurology'
     : userType === 'orthopedics'
     ? '/orthopedics'
+    : userType === 'ophthalmology'
+    ? '/ophthalmology'
     : '/general-medicine';
 
   return [

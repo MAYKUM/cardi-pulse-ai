@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { supabase } from "@/integrations/supabase/client";
 import type { Session } from "@supabase/supabase-js";
 
-export type UserType = 'cardio' | 'generic' | 'neurology' | 'orthopedics';
+export type UserType = 'cardio' | 'generic' | 'neurology' | 'orthopedics' | 'ophthalmology';
 
 interface User {
   id: string;
@@ -58,7 +58,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             .maybeSingle();
           if (!error && data?.specialty) {
             const spec = data.specialty as string;
-            const mapped: UserType = spec === 'cardiology' ? 'cardio' : spec === 'neurology' ? 'neurology' : spec === 'general_medicine' ? 'generic' : 'generic';
+            const mapped: UserType =
+              spec === 'cardiology' ? 'cardio' :
+              spec === 'neurology' ? 'neurology' :
+              spec === 'ophthalmology' ? 'ophthalmology' :
+              spec === 'general_medicine' ? 'generic' : 'generic';
             setUser(prev => prev ? { ...prev, type: mapped } : prev);
           }
         }, 0);
@@ -88,7 +92,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             .maybeSingle();
           if (!error && data?.specialty) {
             const spec = data.specialty as string;
-            const mapped: UserType = spec === 'cardiology' ? 'cardio' : spec === 'neurology' ? 'neurology' : spec === 'general_medicine' ? 'generic' : 'generic';
+            const mapped: UserType =
+              spec === 'cardiology' ? 'cardio' :
+              spec === 'neurology' ? 'neurology' :
+              spec === 'ophthalmology' ? 'ophthalmology' :
+              spec === 'general_medicine' ? 'generic' : 'generic';
             setUser(prev => prev ? { ...prev, type: mapped } : prev);
           }
         }, 0);
@@ -104,7 +112,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   }, []);
 
   const login = (userType: UserType) => {
-    const route = userType === 'cardio' ? 'cardiology' : userType === 'neurology' ? 'neurology' : userType === 'orthopedics' ? 'orthopedics' : 'general-medicine';
+    const route = userType === 'cardio'
+      ? 'cardiology'
+      : userType === 'neurology'
+      ? 'neurology'
+      : userType === 'orthopedics'
+      ? 'orthopedics'
+      : userType === 'ophthalmology'
+      ? 'ophthalmology'
+      : 'general-medicine';
     window.location.assign(`/login/${route}`);
   };
 

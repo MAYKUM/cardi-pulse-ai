@@ -1,6 +1,6 @@
 import { supabase } from "@/integrations/supabase/client";
 
-export type Specialty = "cardiology" | "neurology" | "general_medicine";
+export type Specialty = "cardiology" | "neurology" | "general_medicine" | "ophthalmology";
 
 export interface DoctorProfile {
   id: string;

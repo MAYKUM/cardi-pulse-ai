@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Heart, Stethoscope, LogIn, Brain } from 'lucide-react';
+import { Heart, Stethoscope, LogIn, Brain, Eye } from 'lucide-react';
 import type { UserType } from '@/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
@@ -12,7 +12,15 @@ export const LoginPage: React.FC = () => {
 
   const handleLogin = () => {
     if (selectedSpecialty) {
-      const route = selectedSpecialty === 'cardio' ? 'cardiology' : selectedSpecialty === 'neurology' ? 'neurology' : selectedSpecialty === 'orthopedics' ? 'orthopedics' : 'general-medicine';
+      const route = selectedSpecialty === 'cardio'
+        ? 'cardiology'
+        : selectedSpecialty === 'neurology'
+        ? 'neurology'
+        : selectedSpecialty === 'orthopedics'
+        ? 'orthopedics'
+        : selectedSpecialty === 'ophthalmology'
+        ? 'ophthalmology'
+        : 'general-medicine';
       navigate(`/login/${route}`);
     }
   };
@@ -61,6 +69,12 @@ export const LoginPage: React.FC = () => {
                   <div className="flex items-center gap-2">
                     <Stethoscope className="w-4 h-4 text-accent" />
                     <span>General Medicine</span>
+                  </div>
+                </SelectItem>
+                <SelectItem value="ophthalmology">
+                  <div className="flex items-center gap-2">
+                    <Eye className="w-4 h-4 text-primary" />
+                    <span>Ophthalmology</span>
                   </div>
                 </SelectItem>
               </SelectContent>

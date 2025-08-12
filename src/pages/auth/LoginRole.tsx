@@ -9,9 +9,10 @@ import { supabase } from "@/integrations/supabase/client";
 import { ensureDoctorProfile, fetchDoctorProfile, seedPatientsForSpecialty, Specialty } from "@/hooks/useDoctorProfile";
 import { useAuth } from "@/contexts/AuthContext";
 
-const roleMap: Record<string, { specialty: Specialty; label: string; dashboard: string; userType: 'cardio' | 'neurology' | 'orthopedics' | 'generic' }> = {
+const roleMap: Record<string, { specialty: Specialty; label: string; dashboard: string; userType: 'cardio' | 'neurology' | 'orthopedics' | 'generic' | 'ophthalmology' }> = {
   cardiology: { specialty: "cardiology", label: "Cardiology", dashboard: "/dashboard/cardiology", userType: 'cardio' },
   neurology: { specialty: "neurology", label: "Neurology", dashboard: "/dashboard/neurology", userType: 'neurology' },
+  ophthalmology: { specialty: "ophthalmology", label: "Ophthalmology", dashboard: "/dashboard/ophthalmology", userType: 'ophthalmology' },
   "general-medicine": { specialty: "general_medicine", label: "General Medicine", dashboard: "/dashboard/general", userType: 'generic' },
 };
 

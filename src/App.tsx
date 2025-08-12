@@ -30,6 +30,11 @@ import { NewAppointment } from "./components/NewAppointment";
 import LoginRole from "./pages/auth/LoginRole";
 import Signup from "./pages/auth/Signup";
 import AIAnalysisChat from "./components/AIAnalysisChat";
+import OphthalmologyDashboard from "./components/ophthalmology/OphthalmologyDashboard";
+import MultimodalImagingViewer from "./components/ophthalmology/MultimodalImagingViewer";
+import IOLPlanning from "./components/ophthalmology/IOLPlanning";
+import GlaucomaSuite from "./components/ophthalmology/GlaucomaSuite";
+import TeleScreeningPortal from "./components/ophthalmology/TeleScreeningPortal";
 
 const queryClient = new QueryClient();
 
@@ -111,6 +116,23 @@ function AppRoutes() {
         <Route path="ai-analysis" element={<AIAnalysisChat specialty="neurology" />} />
         <Route path="emergency" element={<div>Emergency Procedures</div>} />
       </Route>
+
+      <Route path="/ophthalmology" element={<AppShell />}>
+        <Route index element={<OphthalmologyDashboard />} />
+        <Route path="dashboard" element={<OphthalmologyDashboard />} />
+        <Route path="patients" element={<PatientsList />} />
+        <Route path="patients/new" element={<PatientIntakeForm />} />
+        <Route path="patients/:id" element={<PatientDashboard />} />
+        <Route path="imaging" element={<MultimodalImagingViewer />} />
+        <Route path="iol-planning" element={<IOLPlanning />} />
+        <Route path="glaucoma" element={<GlaucomaSuite />} />
+        <Route path="tele-screening" element={<TeleScreeningPortal />} />
+        <Route path="ai-analysis" element={<AIAnalysisChat specialty="ophthalmology" />} />
+        <Route path="appointments" element={<Appointments />} />
+        <Route path="appointments/new" element={<NewAppointment />} />
+        <Route path="integrations" element={<IntegrationsHub />} />
+        <Route path="settings" element={<div>Settings</div>} />
+      </Route>
       
       <Route path="/orthopedics" element={<AppShell />}>
         <Route index element={<EnhancedDashboard />} />
@@ -156,11 +178,29 @@ function AppRoutes() {
         <Route path="ai-analysis" element={<AIAnalysisChat specialty="general-medicine" />} />
         <Route path="emergency" element={<div>Emergency Procedures</div>} />
       </Route>
+
+      <Route path="/ophthalmology" element={<AppShell />}>
+        <Route index element={<OphthalmologyDashboard />} />
+        <Route path="dashboard" element={<OphthalmologyDashboard />} />
+        <Route path="patients" element={<PatientsList />} />
+        <Route path="patients/new" element={<PatientIntakeForm />} />
+        <Route path="patients/:id" element={<PatientDashboard />} />
+        <Route path="imaging" element={<MultimodalImagingViewer />} />
+        <Route path="iol-planning" element={<IOLPlanning />} />
+        <Route path="glaucoma" element={<GlaucomaSuite />} />
+        <Route path="tele-screening" element={<TeleScreeningPortal />} />
+        <Route path="ai-analysis" element={<AIAnalysisChat specialty="ophthalmology" />} />
+        <Route path="appointments" element={<Appointments />} />
+        <Route path="appointments/new" element={<NewAppointment />} />
+        <Route path="integrations" element={<IntegrationsHub />} />
+        <Route path="settings" element={<div>Settings</div>} />
+      </Route>
       
       {/* Dashboard role entry points */}
       <Route path="/dashboard">
         <Route path="cardiology" element={<Navigate to="/cardiology/dashboard" replace />} />
         <Route path="neurology" element={<Navigate to="/neurology/dashboard" replace />} />
+        <Route path="ophthalmology" element={<Navigate to="/ophthalmology/dashboard" replace />} />
         <Route path="general" element={<Navigate to="/general-medicine/dashboard" replace />} />
       </Route>
 
@@ -169,14 +209,14 @@ function AppRoutes() {
         path="/login/*"
         element={
           <Navigate
-            to={`/${user.type === 'cardio' ? 'cardiology' : user.type === 'neurology' ? 'neurology' : user.type === 'orthopedics' ? 'orthopedics' : 'general-medicine'}`}
+            to={`/${user.type === 'cardio' ? 'cardiology' : user.type === 'neurology' ? 'neurology' : user.type === 'orthopedics' ? 'orthopedics' : user.type === 'ophthalmology' ? 'ophthalmology' : 'general-medicine'}`}
             replace
           />
         }
       />
       
       {/* Legacy routes - redirect to specialty-specific routes */}
-      <Route path="/" element={<Navigate to={`/${user.type === 'cardio' ? 'cardiology' : user.type === 'neurology' ? 'neurology' : user.type === 'orthopedics' ? 'orthopedics' : 'general-medicine'}`} replace />} />
+      <Route path="/" element={<Navigate to={`/${user.type === 'cardio' ? 'cardiology' : user.type === 'neurology' ? 'neurology' : user.type === 'orthopedics' ? 'orthopedics' : user.type === 'ophthalmology' ? 'ophthalmology' : 'general-medicine'}`} replace />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
