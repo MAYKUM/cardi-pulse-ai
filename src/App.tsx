@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import { AppShell } from "./components/AppShell";
+import { OphthalmologyShell } from "./components/ophthalmology/OphthalmologyShell";
 import { LoginPage } from "./components/LoginPage";
 import { PatientDashboard } from "./components/PatientDashboard";
 import { EnhancedDashboard } from "./components/EnhancedDashboard";
@@ -117,7 +118,7 @@ function AppRoutes() {
         <Route path="emergency" element={<div>Emergency Procedures</div>} />
       </Route>
 
-      <Route path="/ophthalmology" element={<AppShell />}>
+      <Route path="/ophthalmology" element={<OphthalmologyShell />}>
         <Route index element={<OphthalmologyDashboard />} />
         <Route path="dashboard" element={<OphthalmologyDashboard />} />
         <Route path="patients" element={<PatientsList />} />
@@ -179,22 +180,6 @@ function AppRoutes() {
         <Route path="emergency" element={<div>Emergency Procedures</div>} />
       </Route>
 
-      <Route path="/ophthalmology" element={<AppShell />}>
-        <Route index element={<OphthalmologyDashboard />} />
-        <Route path="dashboard" element={<OphthalmologyDashboard />} />
-        <Route path="patients" element={<PatientsList />} />
-        <Route path="patients/new" element={<PatientIntakeForm />} />
-        <Route path="patients/:id" element={<PatientDashboard />} />
-        <Route path="imaging" element={<MultimodalImagingViewer />} />
-        <Route path="iol-planning" element={<IOLPlanning />} />
-        <Route path="glaucoma" element={<GlaucomaSuite />} />
-        <Route path="tele-screening" element={<TeleScreeningPortal />} />
-        <Route path="ai-analysis" element={<AIAnalysisChat specialty="ophthalmology" />} />
-        <Route path="appointments" element={<Appointments />} />
-        <Route path="appointments/new" element={<NewAppointment />} />
-        <Route path="integrations" element={<IntegrationsHub />} />
-        <Route path="settings" element={<div>Settings</div>} />
-      </Route>
       
       {/* Dashboard role entry points */}
       <Route path="/dashboard">
