@@ -1,95 +1,84 @@
 import React from "react";
 import { NavLink, useLocation } from "react-router-dom";
-import { Eye } from "lucide-react";
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  useSidebar,
-} from "@/components/ui/sidebar";
+import { Eye, X } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 import { ophthalmologyNavigationConfig } from "@/config/ophthalmology-nav";
+import { useAuth } from "@/contexts/AuthContext";
 
-export function OphthalmologySidebar() {
-  const { state } = useSidebar();
-  const location = useLocation();
-  const currentPath = location.pathname;
-  const collapsed = state === "collapsed";
-
-  const isActive = (path: string) => currentPath === path;
-  const getNavCls = ({ isActive }: { isActive: boolean }) =>
-    isActive ? "bg-primary/10 text-primary font-medium border-r-2 border-primary" : "hover:bg-muted/50 text-muted-foreground hover:text-foreground";
-
+export function OphthalmologySidebar({ onClose }: { onClose?: () => void }) {
+  const { user } = useAuth();
+  
   return (
-    <Sidebar
-      className={collapsed ? "w-14" : "w-64"}
-      collapsible="icon"
-    >
-      {/* Header */}
-      <div className="p-4 border-b">
-        {!collapsed && (
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-gradient-primary rounded-lg flex items-center justify-center">
-              <Eye className="h-4 w-4 text-white" />
-            </div>
-            <div>
-              <h2 className="font-semibold text-foreground">Ophthalmology</h2>
-              <p className="text-xs text-muted-foreground">AI Medical Platform</p>
-            </div>
+    <>
+      {/* Logo and close button */}
+      <div className="flex h-16 shrink-0 items-center justify-between px-6">
+        <div className="flex items-center gap-x-3">
+          <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-primary to-accent flex items-center justify-center">
+            <Eye className="h-5 w-5 text-primary-foreground" />
           </div>
-        )}
-        {collapsed && (
-          <div className="w-8 h-8 bg-gradient-primary rounded-lg flex items-center justify-center mx-auto">
-            <Eye className="h-4 w-4 text-white" />
-          </div>
+          <span className="text-lg font-semibold">
+            OphthalmoAI
+          </span>
+        </div>
+        {onClose && (
+          <Button variant="ghost" size="sm" onClick={onClose} className="lg:hidden">
+            <X className="h-5 w-5" />
+          </Button>
         )}
       </div>
 
-      <SidebarContent className="px-2">
-        {ophthalmologyNavigationConfig.map((group) => {
-          const hasActiveItem = group.items.some((item) => isActive(item.href));
-          
-          return (
-            <SidebarGroup
-              key={group.title}
-            >
-              {!collapsed && (
-                <SidebarGroupLabel className="text-xs font-medium text-muted-foreground px-3 py-2">
-                  {group.title}
-                </SidebarGroupLabel>
-              )}
+      {/* Navigation */}
+      <nav className="flex flex-1 flex-col px-6">
+        <div className="flex flex-1 flex-col gap-y-6">
+          {ophthalmologyNavigationConfig.map((group) => (
+            <div key={group.title}>
+              <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
+                {group.title}
+              </h3>
+              <ul className="space-y-1">
+                {group.items.map((item) => (
+                  <li key={item.name}>
+                    <NavLink
+                      to={item.href}
+                      className={({ isActive }) =>
+                        cn(
+                          "group flex gap-x-3 rounded-md p-2 text-sm font-medium transition-colors",
+                          isActive
+                            ? "bg-primary-soft text-primary"
+                            : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                        )
+                      }
+                      onClick={onClose}
+                    >
+                      <item.icon className="h-5 w-5 shrink-0" />
+                      <span className="flex-1">{item.name}</span>
+                      {item.count && (
+                        <Badge variant="secondary" className="ml-auto">
+                          {item.count}
+                        </Badge>
+                      )}
+                    </NavLink>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
 
-              <SidebarGroupContent>
-                <SidebarMenu>
-                  {group.items.map((item) => {
-                    const Icon = item.icon;
-                    return (
-                      <SidebarMenuItem key={item.name}>
-                        <SidebarMenuButton asChild>
-                          <NavLink 
-                            to={item.href} 
-                            end 
-                            className={getNavCls}
-                          >
-                            <Icon className="h-4 w-4 flex-shrink-0" />
-                            {!collapsed && (
-                              <span className="ml-3 truncate">{item.name}</span>
-                            )}
-                          </NavLink>
-                        </SidebarMenuButton>
-                      </SidebarMenuItem>
-                    );
-                  })}
-                </SidebarMenu>
-              </SidebarGroupContent>
-            </SidebarGroup>
-          );
-        })}
-      </SidebarContent>
-    </Sidebar>
+        {/* Emergency contact card */}
+        <div className="mt-auto mb-6 p-4 bg-critical/5 border border-critical/20 rounded-lg">
+          <div className="flex items-center gap-x-2 mb-2">
+            <div className="h-2 w-2 bg-critical rounded-full animate-pulse" />
+            <span className="text-sm font-medium text-critical">Emergency</span>
+          </div>
+          <p className="text-xs text-muted-foreground mb-3">24/7 Ophthalmology Emergency Line</p>
+          <Button size="sm" className="w-full bg-critical hover:bg-critical/90">
+            Call Now
+          </Button>
+        </div>
+      </nav>
+    </>
   );
 }
