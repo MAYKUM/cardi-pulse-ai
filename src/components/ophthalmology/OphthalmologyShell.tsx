@@ -61,7 +61,7 @@ export function OphthalmologyShell() {
                   </span>
                 </div>
                 <div className="hidden sm:block">
-                  <p className="text-sm font-medium">{user?.name || 'Dr. Ophthalmologist'}</p>
+                  <p className="text-sm font-medium text-foreground">{user?.name || 'Dr. Ophthalmologist'}</p>
                   <p className="text-xs text-muted-foreground">Ophthalmology</p>
                 </div>
               </div>

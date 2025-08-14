@@ -1,5 +1,6 @@
 import React from "react";
 import { NavLink, useLocation } from "react-router-dom";
+import { Eye } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -33,17 +34,17 @@ export function OphthalmologySidebar() {
         {!collapsed && (
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 bg-gradient-primary rounded-lg flex items-center justify-center">
-              <span className="text-white text-sm font-bold">👁️</span>
+              <Eye className="h-4 w-4 text-white" />
             </div>
             <div>
-              <h2 className="font-semibold text-primary">Ophthalmology</h2>
+              <h2 className="font-semibold text-foreground">Ophthalmology</h2>
               <p className="text-xs text-muted-foreground">AI Medical Platform</p>
             </div>
           </div>
         )}
         {collapsed && (
           <div className="w-8 h-8 bg-gradient-primary rounded-lg flex items-center justify-center mx-auto">
-            <span className="text-white text-sm">👁️</span>
+            <Eye className="h-4 w-4 text-white" />
           </div>
         )}
       </div>
