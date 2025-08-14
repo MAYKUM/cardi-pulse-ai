@@ -36,6 +36,7 @@ import MultimodalImagingViewer from "./components/ophthalmology/MultimodalImagin
 import IOLPlanning from "./components/ophthalmology/IOLPlanning";
 import GlaucomaSuite from "./components/ophthalmology/GlaucomaSuite";
 import TeleScreeningPortal from "./components/ophthalmology/TeleScreeningPortal";
+import { SettingsPage } from "./components/settings/SettingsPage";
 
 const queryClient = new QueryClient();
 
@@ -84,7 +85,7 @@ function AppRoutes() {
         <Route path="appointments/new" element={<NewAppointment />} />
         <Route path="integrations" element={<IntegrationsHub />} />
         <Route path="security" element={<div>Security Settings</div>} />
-        <Route path="settings" element={<div>Settings</div>} />
+        <Route path="settings" element={<SettingsPage />} />
         <Route path="upload" element={<div>Upload Images</div>} />
         <Route path="search" element={<div>Quick Search</div>} />
         <Route path="ai-analysis" element={<AIAnalysisChat specialty="cardiology" />} />
@@ -111,7 +112,7 @@ function AppRoutes() {
         <Route path="appointments/new" element={<NewAppointment />} />
         <Route path="integrations" element={<IntegrationsHub />} />
         <Route path="security" element={<div>Security Settings</div>} />
-        <Route path="settings" element={<div>Settings</div>} />
+        <Route path="settings" element={<SettingsPage />} />
         <Route path="upload" element={<div>Upload Images</div>} />
         <Route path="search" element={<div>Quick Search</div>} />
         <Route path="ai-analysis" element={<AIAnalysisChat specialty="neurology" />} />
@@ -132,7 +133,7 @@ function AppRoutes() {
         <Route path="appointments" element={<Appointments />} />
         <Route path="appointments/new" element={<NewAppointment />} />
         <Route path="integrations" element={<IntegrationsHub />} />
-        <Route path="settings" element={<div>Settings</div>} />
+        <Route path="settings" element={<SettingsPage />} />
       </Route>
       
       <Route path="/orthopedics" element={<AppShell />}>
@@ -154,7 +155,7 @@ function AppRoutes() {
         <Route path="appointments" element={<Appointments />} />
         <Route path="appointments/new" element={<NewAppointment />} />
         <Route path="integrations" element={<IntegrationsHub />} />
-        <Route path="settings" element={<div>Orthopedics Settings</div>} />
+        <Route path="settings" element={<SettingsPage />} />
       </Route>
       
       <Route path="/general-medicine" element={<AppShell />}>
@@ -173,7 +174,7 @@ function AppRoutes() {
         <Route path="appointments/new" element={<NewAppointment />} />
         <Route path="integrations" element={<IntegrationsHub />} />
         <Route path="security" element={<div>Security Settings</div>} />
-        <Route path="settings" element={<div>Settings</div>} />
+        <Route path="settings" element={<SettingsPage />} />
         <Route path="upload" element={<div>Upload Images</div>} />
         <Route path="search" element={<div>Quick Search</div>} />
         <Route path="ai-analysis" element={<AIAnalysisChat specialty="general-medicine" />} />
