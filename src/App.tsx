@@ -43,6 +43,9 @@ import { NeuropsychTests } from "./components/NeuropsychTests";
 import { MovementTracking } from "./components/MovementTracking";
 import { SeizureLogs } from "./components/SeizureLogs";
 import { SecuritySettings } from "./components/SecuritySettings";
+import { ImageUpload } from "./components/ImageUpload";
+import { QuickSearch } from "./components/QuickSearch";
+import { EmergencyProcedures } from "./components/EmergencyProcedures";
 
 const queryClient = new QueryClient();
 
@@ -75,7 +78,7 @@ function AppRoutes() {
 
   return (
     <Routes>
-      <Route path="/cardiology" element={<AppShell />}>
+      <Route path="/cardiology" element={<ProtectedRoute><AppShell /></ProtectedRoute>}>
         <Route index element={<EnhancedDashboard />} />
         <Route path="dashboard" element={<EnhancedDashboard />} />
         <Route path="patients" element={<PatientsList />} />
@@ -90,15 +93,15 @@ function AppRoutes() {
         <Route path="appointments" element={<Appointments />} />
         <Route path="appointments/new" element={<NewAppointment />} />
         <Route path="integrations" element={<IntegrationsHub />} />
-        <Route path="security" element={<div>Security Settings</div>} />
+        <Route path="security" element={<SecuritySettings />} />
         <Route path="settings" element={<SettingsPage />} />
-        <Route path="upload" element={<div>Upload Images</div>} />
-        <Route path="search" element={<div>Quick Search</div>} />
+        <Route path="upload" element={<ImageUpload />} />
+        <Route path="search" element={<QuickSearch />} />
         <Route path="ai-analysis" element={<AIAnalysisChat specialty="cardiology" />} />
-        <Route path="emergency" element={<div>Emergency Procedures</div>} />
+        <Route path="emergency" element={<EmergencyProcedures />} />
       </Route>
       
-      <Route path="/neurology" element={<AppShell />}>
+      <Route path="/neurology" element={<ProtectedRoute><AppShell /></ProtectedRoute>}>
         <Route index element={<EnhancedDashboard />} />
         <Route path="dashboard" element={<EnhancedDashboard />} />
         <Route path="patients" element={<PatientsList />} />
@@ -119,13 +122,13 @@ function AppRoutes() {
         <Route path="integrations" element={<IntegrationsHub />} />
         <Route path="security" element={<SecuritySettings />} />
         <Route path="settings" element={<SettingsPage />} />
-        <Route path="upload" element={<div>Upload Images</div>} />
-        <Route path="search" element={<div>Quick Search</div>} />
+        <Route path="upload" element={<ImageUpload />} />
+        <Route path="search" element={<QuickSearch />} />
         <Route path="ai-analysis" element={<AIAnalysisChat specialty="neurology" />} />
-        <Route path="emergency" element={<div>Emergency Procedures</div>} />
+        <Route path="emergency" element={<EmergencyProcedures />} />
       </Route>
 
-      <Route path="/ophthalmology" element={<OphthalmologyShell />}>
+      <Route path="/ophthalmology" element={<ProtectedRoute><OphthalmologyShell /></ProtectedRoute>}>
         <Route index element={<OphthalmologyDashboard />} />
         <Route path="dashboard" element={<OphthalmologyDashboard />} />
         <Route path="patients" element={<PatientsList />} />
@@ -142,7 +145,7 @@ function AppRoutes() {
         <Route path="settings" element={<SettingsPage />} />
       </Route>
       
-      <Route path="/orthopedics" element={<AppShell />}>
+      <Route path="/orthopedics" element={<ProtectedRoute><AppShell /></ProtectedRoute>}>
         <Route index element={<EnhancedDashboard />} />
         <Route path="dashboard" element={<EnhancedDashboard />} />
         <Route path="patients" element={<PatientsList />} />
@@ -164,7 +167,7 @@ function AppRoutes() {
         <Route path="settings" element={<SettingsPage />} />
       </Route>
       
-      <Route path="/general-medicine" element={<AppShell />}>
+      <Route path="/general-medicine" element={<ProtectedRoute><AppShell /></ProtectedRoute>}>
         <Route index element={<EnhancedDashboard />} />
         <Route path="dashboard" element={<EnhancedDashboard />} />
         <Route path="patients" element={<PatientsList />} />
@@ -179,12 +182,12 @@ function AppRoutes() {
         <Route path="appointments" element={<Appointments />} />
         <Route path="appointments/new" element={<NewAppointment />} />
         <Route path="integrations" element={<IntegrationsHub />} />
-        <Route path="security" element={<div>Security Settings</div>} />
+        <Route path="security" element={<SecuritySettings />} />
         <Route path="settings" element={<SettingsPage />} />
-        <Route path="upload" element={<div>Upload Images</div>} />
-        <Route path="search" element={<div>Quick Search</div>} />
+        <Route path="upload" element={<ImageUpload />} />
+        <Route path="search" element={<QuickSearch />} />
         <Route path="ai-analysis" element={<AIAnalysisChat specialty="general-medicine" />} />
-        <Route path="emergency" element={<div>Emergency Procedures</div>} />
+        <Route path="emergency" element={<EmergencyProcedures />} />
       </Route>
 
       
