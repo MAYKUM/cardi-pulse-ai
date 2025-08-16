@@ -68,6 +68,13 @@ export type Database = {
         }
         Relationships: [
           {
+            foreignKeyName: "fk_patients_doctor_id"
+            columns: ["doctor_id"]
+            isOneToOne: false
+            referencedRelation: "doctors"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "patients_doctor_id_fkey"
             columns: ["doctor_id"]
             isOneToOne: false
@@ -109,6 +116,10 @@ export type Database = {
       seed_patients_rate_limited: {
         Args: { p_specialty: string }
         Returns: undefined
+      }
+      validate_medical_history: {
+        Args: { data: Json }
+        Returns: boolean
       }
     }
     Enums: {
