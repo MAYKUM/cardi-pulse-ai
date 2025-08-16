@@ -37,6 +37,12 @@ import IOLPlanning from "./components/ophthalmology/IOLPlanning";
 import GlaucomaSuite from "./components/ophthalmology/GlaucomaSuite";
 import TeleScreeningPortal from "./components/ophthalmology/TeleScreeningPortal";
 import { SettingsPage } from "./components/settings/SettingsPage";
+import { ProtectedRoute } from "./components/ProtectedRoute";
+import { ErrorBoundary } from "./components/ErrorBoundary";
+import { NeuropsychTests } from "./components/NeuropsychTests";
+import { MovementTracking } from "./components/MovementTracking";
+import { SeizureLogs } from "./components/SeizureLogs";
+import { SecuritySettings } from "./components/SecuritySettings";
 
 const queryClient = new QueryClient();
 
@@ -102,16 +108,16 @@ function AppRoutes() {
         <Route path="eeg" element={<EEGAnalysis />} />
         <Route path="video-eeg" element={<VideoEEG />} />
         <Route path="emg" element={<EMGPanel />} />
-        <Route path="neuropsych" element={<div>Neuropsychological Tests</div>} />
-        <Route path="movement" element={<div>Movement Tracking</div>} />
-        <Route path="seizure-logs" element={<div>Seizure Logs</div>} />
+        <Route path="neuropsych" element={<NeuropsychTests />} />
+        <Route path="movement" element={<MovementTracking />} />
+        <Route path="seizure-logs" element={<SeizureLogs />} />
         <Route path="lab" element={<LabResults />} />
         <Route path="telehealth" element={<Telecardiology />} />
         <Route path="devices" element={<DeviceIntegration />} />
         <Route path="appointments" element={<Appointments />} />
         <Route path="appointments/new" element={<NewAppointment />} />
         <Route path="integrations" element={<IntegrationsHub />} />
-        <Route path="security" element={<div>Security Settings</div>} />
+        <Route path="security" element={<SecuritySettings />} />
         <Route path="settings" element={<SettingsPage />} />
         <Route path="upload" element={<div>Upload Images</div>} />
         <Route path="search" element={<div>Quick Search</div>} />
@@ -215,7 +221,9 @@ const App = () => (
       <Sonner />
       <AuthProvider>
         <BrowserRouter>
-          <AppRoutes />
+          <ErrorBoundary>
+            <AppRoutes />
+          </ErrorBoundary>
         </BrowserRouter>
       </AuthProvider>
     </TooltipProvider>
