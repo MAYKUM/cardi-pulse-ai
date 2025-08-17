@@ -15,6 +15,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { useAuth } from "@/contexts/AuthContext";
+import { UserProfileDropdown } from "@/components/UserProfileDropdown";
 
 export function OphthalmologyShell() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -147,24 +148,19 @@ export function OphthalmologyShell() {
               </Popover>
 
               {/* Profile */}
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <div className="flex items-center gap-x-2 cursor-pointer">
-                    <div className="h-8 w-8 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center">
-                      <span className="text-sm font-medium text-primary-foreground">
-                        {user?.name ? user.name.charAt(0).toUpperCase() : 'DO'}
-                      </span>
-                    </div>
-                    <div className="hidden sm:block">
-                      <p className="text-sm font-medium">{user?.name || 'Dr. Ophthalmologist'}</p>
-                      <p className="text-xs text-muted-foreground">Ophthalmology</p>
-                    </div>
+              <UserProfileDropdown>
+                <Button variant="ghost" className="flex items-center gap-x-2 h-auto p-1">
+                  <div className="h-8 w-8 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center">
+                    <span className="text-sm font-medium text-primary-foreground">
+                      {user?.name ? user.name.charAt(0).toUpperCase() : 'DO'}
+                    </span>
                   </div>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>{user?.name || 'Dr. Ophthalmologist'} - Ophthalmologist</p>
-                </TooltipContent>
-              </Tooltip>
+                  <div className="hidden sm:block text-left">
+                    <p className="text-sm font-medium">{user?.name || 'Dr. Ophthalmologist'}</p>
+                    <p className="text-xs text-muted-foreground">Ophthalmology</p>
+                  </div>
+                </Button>
+              </UserProfileDropdown>
             </div>
           </div>
         </div>

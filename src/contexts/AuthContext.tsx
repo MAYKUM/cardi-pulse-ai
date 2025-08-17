@@ -62,6 +62,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
               spec === 'cardiology' ? 'cardio' :
               spec === 'neurology' ? 'neurology' :
               spec === 'ophthalmology' ? 'ophthalmology' :
+              spec === 'orthopedics' ? 'orthopedics' :
               spec === 'general_medicine' ? 'generic' : 'generic';
             setUser(prev => prev ? { ...prev, type: mapped } : prev);
           }
@@ -96,6 +97,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
               spec === 'cardiology' ? 'cardio' :
               spec === 'neurology' ? 'neurology' :
               spec === 'ophthalmology' ? 'ophthalmology' :
+              spec === 'orthopedics' ? 'orthopedics' :
               spec === 'general_medicine' ? 'generic' : 'generic';
             setUser(prev => prev ? { ...prev, type: mapped } : prev);
           }
@@ -124,9 +126,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     window.location.assign(`/login/${route}`);
   };
 
-  const logout = () => {
-    supabase.auth.signOut();
+  const logout = async () => {
+    await supabase.auth.signOut();
     setUser(null);
+    window.location.href = '/login';
   };
 
   return (

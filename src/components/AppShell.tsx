@@ -21,6 +21,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { cn } from "@/lib/utils";
 import { getNavigationConfig, getHeaderActionsConfig } from "@/config/app-config";
 import { useAuth } from "@/contexts/AuthContext";
+import { UserProfileDropdown } from "@/components/UserProfileDropdown";
 
 export function AppShell() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -156,26 +157,27 @@ export function AppShell() {
               </Popover>
 
               {/* Profile */}
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <div className="flex items-center gap-x-2 cursor-pointer">
-                    <div className="h-8 w-8 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center">
-                      <span className="text-sm font-medium text-primary-foreground">
-                        {user?.type === 'cardio' ? 'DC' : 'DG'}
-                      </span>
-                    </div>
-                    <div className="hidden sm:block">
-                      <p className="text-sm font-medium">{user?.name || 'Doctor'}</p>
-                      <p className="text-xs text-muted-foreground">
-                        {user?.type === 'cardio' ? 'Cardiologist' : 'Physician'}
-                      </p>
-                    </div>
+              <UserProfileDropdown>
+                <Button variant="ghost" className="flex items-center gap-x-2 h-auto p-1">
+                  <div className="h-8 w-8 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center">
+                    <span className="text-sm font-medium text-primary-foreground">
+                      {user?.type === 'cardio' ? 'DC' : 
+                       user?.type === 'neurology' ? 'DN' :
+                       user?.type === 'ophthalmology' ? 'DO' :
+                       user?.type === 'orthopedics' ? 'DR' : 'DG'}
+                    </span>
                   </div>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>{user?.name} - {user?.type === 'cardio' ? 'Cardiologist' : 'Physician'}</p>
-                </TooltipContent>
-              </Tooltip>
+                  <div className="hidden sm:block text-left">
+                    <p className="text-sm font-medium">{user?.name || 'Doctor'}</p>
+                    <p className="text-xs text-muted-foreground">
+                      {user?.type === 'cardio' ? 'Cardiologist' : 
+                       user?.type === 'neurology' ? 'Neurologist' :
+                       user?.type === 'ophthalmology' ? 'Ophthalmologist' :
+                       user?.type === 'orthopedics' ? 'Orthopedist' : 'Physician'}
+                    </p>
+                  </div>
+                </Button>
+              </UserProfileDropdown>
             </div>
           </div>
         </div>

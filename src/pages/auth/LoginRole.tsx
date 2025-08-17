@@ -10,10 +10,11 @@ import { ensureDoctorProfile, fetchDoctorProfile, seedPatientsForSpecialty, Spec
 import { useAuth } from "@/contexts/AuthContext";
 
 const roleMap: Record<string, { specialty: Specialty; label: string; dashboard: string; userType: 'cardio' | 'neurology' | 'orthopedics' | 'generic' | 'ophthalmology' }> = {
-  cardiology: { specialty: "cardiology", label: "Cardiology", dashboard: "/dashboard/cardiology", userType: 'cardio' },
-  neurology: { specialty: "neurology", label: "Neurology", dashboard: "/dashboard/neurology", userType: 'neurology' },
-  ophthalmology: { specialty: "ophthalmology", label: "Ophthalmology", dashboard: "/dashboard/ophthalmology", userType: 'ophthalmology' },
-  "general-medicine": { specialty: "general_medicine", label: "General Medicine", dashboard: "/dashboard/general", userType: 'generic' },
+  cardiology: { specialty: "cardiology", label: "Cardiology", dashboard: "/cardiology", userType: 'cardio' },
+  neurology: { specialty: "neurology", label: "Neurology", dashboard: "/neurology", userType: 'neurology' },
+  ophthalmology: { specialty: "ophthalmology", label: "Ophthalmology", dashboard: "/ophthalmology", userType: 'ophthalmology' },
+  orthopedics: { specialty: "orthopedics", label: "Orthopedics", dashboard: "/orthopedics", userType: 'orthopedics' },
+  "general-medicine": { specialty: "general_medicine", label: "General Medicine", dashboard: "/general-medicine", userType: 'generic' },
 };
 
 export default function LoginRole() {
