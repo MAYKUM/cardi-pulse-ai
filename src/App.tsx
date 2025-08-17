@@ -52,6 +52,8 @@ const queryClient = new QueryClient();
 function AppRoutes() {
   const { user, isLoading } = useAuth();
 
+  
+
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -199,6 +201,7 @@ function AppRoutes() {
         <Route path="cardiology" element={<Navigate to="/cardiology/dashboard" replace />} />
         <Route path="neurology" element={<Navigate to="/neurology/dashboard" replace />} />
         <Route path="ophthalmology" element={<Navigate to="/ophthalmology/dashboard" replace />} />
+        <Route path="orthopedics" element={<Navigate to="/orthopedics/dashboard" replace />} />
         <Route path="general" element={<Navigate to="/general-medicine/dashboard" replace />} />
       </Route>
 
@@ -222,17 +225,17 @@ function AppRoutes() {
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <AuthProvider>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
+    <TooltipProvider>
+      <Toaster />
+      <Sonner />
+      <BrowserRouter>
+        <AuthProvider>
           <ErrorBoundary>
             <AppRoutes />
           </ErrorBoundary>
-        </BrowserRouter>
-      </TooltipProvider>
-    </AuthProvider>
+        </AuthProvider>
+      </BrowserRouter>
+    </TooltipProvider>
   </QueryClientProvider>
 );
 
