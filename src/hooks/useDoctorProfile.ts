@@ -38,7 +38,7 @@ export async function ensureDoctorProfile(specialty: Specialty, name?: string) {
   const { data, error } = await supabase
     .from("doctors")
     .upsert(
-      [{ id: userId, specialty, name: name ?? null, profile_data: {} }],
+      [{ id: userId, specialty: specialty as any, name: name ?? null, profile_data: {} }],
       { onConflict: "id" }
     )
     .select("id, name, specialty, profile_data, created_at")
@@ -50,7 +50,7 @@ export async function ensureDoctorProfile(specialty: Specialty, name?: string) {
 
 export async function seedPatientsForSpecialty(specialty: Specialty) {
   const { error } = await supabase.rpc("seed_patients_for_current_user", {
-    p_specialty: specialty,
+    p_specialty: specialty as any,
   });
   if (error) console.error("Seed patients RPC error", error);
 }

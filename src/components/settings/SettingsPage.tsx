@@ -24,17 +24,17 @@ export function SettingsPage() {
   const renderContent = () => {
     switch (activeSection) {
       case "preferences":
-        return <UserPreferences specialty={specialty} />;
+        return <UserPreferences specialty={specialty as any} />;
       case "data":
         return <DataManagement />;
       case "notifications":
-        return <NotificationSettings specialty={specialty} />;
+        return <NotificationSettings specialty={specialty as any} />;
       case "ai-models":
         return <AIModelConfiguration />;
       case "privacy":
         return <DataManagement />; // Privacy is handled in Data Management
       default:
-        return <UserPreferences specialty={specialty} />;
+        return <UserPreferences specialty={specialty as any} />;
     }
   };
 
