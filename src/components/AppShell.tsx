@@ -22,6 +22,7 @@ import { cn } from "@/lib/utils";
 import { getNavigationConfig, getHeaderActionsConfig } from "@/config/app-config";
 import { useAuth } from "@/contexts/AuthContext";
 import { UserProfileDropdown } from "@/components/UserProfileDropdown";
+import { SessionTimer } from "@/components/SessionTimer";
 
 export function AppShell() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -75,6 +76,9 @@ export function AppShell() {
               />
             </div>
             <div className="flex items-center gap-x-4 lg:gap-x-6">
+              {/* Session Timer */}
+              <SessionTimer />
+              
               {/* Notifications */}
               <Popover open={notificationsPanelOpen} onOpenChange={setNotificationsPanelOpen}>
                 <PopoverTrigger asChild>

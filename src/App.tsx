@@ -66,16 +66,9 @@ function AppRoutes() {
     return (
       <Routes>
         <Route path="/signup" element={<Signup />} />
-        <Route path="/login">
-          <Route path="cardiology" element={<LoginRole />} />
-          <Route path="neurology" element={<LoginRole />} />
-          <Route path="ophthalmology" element={<LoginRole />} />
-          <Route path="orthopedics" element={<LoginRole />} />
-          <Route path="general-medicine" element={<LoginRole />} />
-          <Route path=":role" element={<LoginRole />} />
-        </Route>
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/login/:role" element={<LoginRole />} />
         <Route path="/" element={<Navigate to="/login" replace />} />
-        <Route path="/login" element={<Navigate to="/login/general-medicine" replace />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     );
