@@ -36,37 +36,48 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
+  const loadUserWithSpecialty = async (sUser: any) => {
+    const baseUser: User = {
+      id: sUser.id,
+      name: (sUser.user_metadata?.full_name as string) || (sUser.email?.split("@")[0] ?? "Clinician"),
+      type: 'generic',
+      email: sUser.email ?? ''
+    };
+    
+    // Set base user first
+    setUser(baseUser);
+    
+    // Then fetch specialty
+    try {
+      const { data, error } = await supabase
+        .from('doctors')
+        .select('specialty')
+        .eq('id', sUser.id)
+        .maybeSingle();
+        
+      if (!error && data?.specialty) {
+        const spec = data.specialty as string;
+        const mapped: UserType =
+          spec === 'cardiology' ? 'cardio' :
+          spec === 'neurology' ? 'neurology' :
+          spec === 'ophthalmology' ? 'ophthalmology' :
+          spec === 'orthopedics' ? 'orthopedics' :
+          spec === 'general_medicine' ? 'generic' : 'generic';
+        setUser(prev => prev ? { ...prev, type: mapped } : prev);
+      }
+    } catch (err) {
+      console.error('Error fetching user specialty:', err);
+    }
+  };
+
   useEffect(() => {
     // Set up auth state listener FIRST
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (session?.user) {
-        const sUser = session.user;
-        const baseUser: User = {
-          id: sUser.id,
-          name: (sUser.user_metadata?.full_name as string) || (sUser.email?.split("@")[0] ?? "Clinician"),
-          type: 'generic',
-          email: sUser.email ?? ''
-        };
-        setUser(baseUser);
-
-        // Defer Supabase calls to avoid deadlocks
-        setTimeout(async () => {
-          const { data, error } = await supabase
-            .from('doctors')
-            .select('specialty')
-            .eq('id', sUser.id)
-            .maybeSingle();
-          if (!error && data?.specialty) {
-            const spec = data.specialty as string;
-            const mapped: UserType =
-              spec === 'cardiology' ? 'cardio' :
-              spec === 'neurology' ? 'neurology' :
-              spec === 'ophthalmology' ? 'ophthalmology' :
-              spec === 'orthopedics' ? 'orthopedics' :
-              spec === 'general_medicine' ? 'generic' : 'generic';
-            setUser(prev => prev ? { ...prev, type: mapped } : prev);
-          }
-        }, 0);
+        // Use setTimeout to avoid deadlocks but with a shorter delay to improve UX
+        setTimeout(() => {
+          loadUserWithSpecialty(session.user);
+        }, 10);
       } else {
         setUser(null);
       }
@@ -76,32 +87,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     // THEN check for existing session
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session?.user) {
-        const sUser = session.user;
-        const baseUser: User = {
-          id: sUser.id,
-          name: (sUser.user_metadata?.full_name as string) || (sUser.email?.split("@")[0] ?? "Clinician"),
-          type: 'generic',
-          email: sUser.email ?? ''
-        };
-        setUser(baseUser);
-
-        setTimeout(async () => {
-          const { data, error } = await supabase
-            .from('doctors')
-            .select('specialty')
-            .eq('id', sUser.id)
-            .maybeSingle();
-          if (!error && data?.specialty) {
-            const spec = data.specialty as string;
-            const mapped: UserType =
-              spec === 'cardiology' ? 'cardio' :
-              spec === 'neurology' ? 'neurology' :
-              spec === 'ophthalmology' ? 'ophthalmology' :
-              spec === 'orthopedics' ? 'orthopedics' :
-              spec === 'general_medicine' ? 'generic' : 'generic';
-            setUser(prev => prev ? { ...prev, type: mapped } : prev);
-          }
-        }, 0);
+        setTimeout(() => {
+          loadUserWithSpecialty(session.user);
+        }, 10);
       } else {
         setUser(null);
       }

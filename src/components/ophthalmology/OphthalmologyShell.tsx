@@ -16,6 +16,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { useAuth } from "@/contexts/AuthContext";
 import { UserProfileDropdown } from "@/components/UserProfileDropdown";
+import { SessionTimer } from "@/components/SessionTimer";
 
 export function OphthalmologyShell() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -66,6 +67,9 @@ export function OphthalmologyShell() {
               />
             </div>
             <div className="flex items-center gap-x-4 lg:gap-x-6">
+              {/* Session Timer */}
+              <SessionTimer />
+              
               {/* Notifications */}
               <Popover open={notificationsPanelOpen} onOpenChange={setNotificationsPanelOpen}>
                 <PopoverTrigger asChild>
