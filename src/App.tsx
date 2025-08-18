@@ -30,6 +30,7 @@ import { PatientsList } from "./components/PatientsList";
 import { NewAppointment } from "./components/NewAppointment";
 import LoginRole from "./pages/auth/LoginRole";
 import Signup from "./pages/auth/Signup";
+import LogoutPage from "./pages/auth/LogoutPage";
 import AIAnalysisChat from "./components/AIAnalysisChat";
 import OphthalmologyDashboard from "./components/ophthalmology/OphthalmologyDashboard";
 import MultimodalImagingViewer from "./components/ophthalmology/MultimodalImagingViewer";
@@ -68,6 +69,7 @@ function AppRoutes() {
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/login/:role" element={<LoginRole />} />
+        <Route path="/logout" element={<LogoutPage />} />
         <Route path="/" element={<Navigate to="/login" replace />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
