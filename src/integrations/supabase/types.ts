@@ -128,6 +128,7 @@ export type Database = {
         | "neurology"
         | "general_medicine"
         | "ophthalmology"
+        | "orthopedics"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -260,6 +261,7 @@ export const Constants = {
         "neurology",
         "general_medicine",
         "ophthalmology",
+        "orthopedics",
       ],
     },
   },

@@ -46,7 +46,13 @@ import { SeizureLogs } from "./components/SeizureLogs";
 import { SecuritySettings } from "./components/SecuritySettings";
 import { ImageUpload } from "./components/ImageUpload";
 import { QuickSearch } from "./components/QuickSearch";
-import { EmergencyProcedures } from "./components/EmergencyProcedures";
+import { BoneViewer3D } from "./components/BoneViewer3D";
+import { FractureHealing } from "./components/FractureHealing";
+import { OsteoporosisRisk } from "./components/OsteoporosisRisk";
+import { JointReplacementRegistry } from "./components/JointReplacementRegistry";
+import { TeleOrthoConsult } from "./components/TeleOrthoConsult";
+import { TestReports } from "./components/TestReports";
+import { VitalSigns } from "./components/VitalSigns";
 
 const queryClient = new QueryClient();
 
@@ -153,13 +159,13 @@ function AppRoutes() {
         <Route path="patients/:id" element={<PatientDashboard />} />
         <Route path="imaging" element={<DicomViewer />} />
         <Route path="xray" element={<XrayAnalysis />} />
-        <Route path="3d-viewer" element={<div>3D Bone Viewer</div>} />
+        <Route path="3d-viewer" element={<BoneViewer3D />} />
         <Route path="surgical-planning" element={<SurgicalPlanning />} />
         <Route path="rehab" element={<RehabTracker />} />
-        <Route path="fracture-healing" element={<div>Fracture Healing Tracker</div>} />
-        <Route path="osteoporosis" element={<div>Osteoporosis Risk Dashboard</div>} />
-        <Route path="joint-registry" element={<div>Joint Replacement Registry</div>} />
-        <Route path="tele-consult" element={<div>Tele-Ortho Consultation</div>} />
+        <Route path="fracture-healing" element={<FractureHealing />} />
+        <Route path="osteoporosis" element={<OsteoporosisRisk />} />
+        <Route path="joint-registry" element={<JointReplacementRegistry />} />
+        <Route path="tele-consult" element={<TeleOrthoConsult />} />
         <Route path="lab" element={<LabResults />} />
         <Route path="appointments" element={<Appointments />} />
         <Route path="appointments/new" element={<NewAppointment />} />
@@ -175,8 +181,8 @@ function AppRoutes() {
         <Route path="patients/:id" element={<PatientDashboard />} />
         <Route path="imaging" element={<DicomViewer />} />
         <Route path="lab" element={<LabResults />} />
-        <Route path="reports" element={<div>Test Reports</div>} />
-        <Route path="vitals" element={<div>Vital Signs</div>} />
+        <Route path="reports" element={<TestReports />} />
+        <Route path="vitals" element={<VitalSigns />} />
         <Route path="telehealth" element={<Telecardiology />} />
         <Route path="devices" element={<DeviceIntegration />} />
         <Route path="appointments" element={<Appointments />} />
