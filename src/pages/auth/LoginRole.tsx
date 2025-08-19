@@ -52,8 +52,7 @@ export default function LoginRole() {
         await seedPatientsForSpecialty(roleCfg.specialty);
       }
 
-      // Keep the existing UI context in sync
-      login(roleCfg.userType);
+      // Navigate directly to the dashboard - the auth context will handle user state
       navigate(roleCfg.dashboard, { replace: true });
     } catch (err: any) {
       toast({ title: "Login failed", description: err.message ?? String(err), variant: "destructive" });

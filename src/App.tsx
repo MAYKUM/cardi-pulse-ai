@@ -200,19 +200,16 @@ function AppRoutes() {
         <Route path="general" element={<Navigate to="/general-medicine/dashboard" replace />} />
       </Route>
 
-      {/* If an authenticated user hits any /login/* URL, redirect them to their home */}
-      <Route
-        path="/login/*"
-        element={
-          <Navigate
-            to={`/${user.type === 'cardio' ? 'cardiology' : user.type === 'neurology' ? 'neurology' : user.type === 'orthopedics' ? 'orthopedics' : user.type === 'ophthalmology' ? 'ophthalmology' : 'general-medicine'}`}
-            replace
-          />
-        }
-      />
+      {/* If an authenticated user hits any /login/* URL, redirect them to dashboard selection */}
+      <Route path="/login/*" element={<Navigate to="/" replace />} />
       
-      {/* Legacy routes - redirect to specialty-specific routes */}
-      <Route path="/" element={<Navigate to={`/${user.type === 'cardio' ? 'cardiology' : user.type === 'neurology' ? 'neurology' : user.type === 'orthopedics' ? 'orthopedics' : user.type === 'ophthalmology' ? 'ophthalmology' : 'general-medicine'}`} replace />} />
+      {/* Root route for authenticated users - redirect based on their type */}
+      <Route path="/" element={
+        <Navigate 
+          to={`/${user.type === 'cardio' ? 'cardiology' : user.type === 'neurology' ? 'neurology' : user.type === 'orthopedics' ? 'orthopedics' : user.type === 'ophthalmology' ? 'ophthalmology' : 'general-medicine'}/dashboard`} 
+          replace 
+        />
+      } />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );

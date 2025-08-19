@@ -102,6 +102,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   }, []);
 
   const login = (userType: UserType) => {
+    // This function is used for redirecting to specialty-specific login pages
     const route = userType === 'cardio'
       ? 'cardiology'
       : userType === 'neurology'
