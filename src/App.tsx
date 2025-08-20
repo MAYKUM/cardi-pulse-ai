@@ -14,7 +14,7 @@ const AppShell = React.lazy(() => import("./components/AppShell").then(module =>
 const OphthalmologyShell = React.lazy(() => import("./components/ophthalmology/OphthalmologyShell").then(module => ({ default: module.OphthalmologyShell })));
 const LoginPage = React.lazy(() => import("./components/LoginPage").then(module => ({ default: module.LoginPage })));
 const PatientDashboard = React.lazy(() => import("./components/PatientDashboard").then(module => ({ default: module.PatientDashboard })));
-const EnhancedDashboard = React.lazy(() => import("./components/EnhancedDashboard"));
+const EnhancedDashboard = React.lazy(() => import("./components/EnhancedDashboard").then(module => ({ default: module.EnhancedDashboard })));
 const PatientIntakeForm = React.lazy(() => import("./components/PatientIntakeForm").then(module => ({ default: module.PatientIntakeForm })));
 const DicomViewer = React.lazy(() => import("./components/DicomViewer").then(module => ({ default: module.DicomViewer })));
 const EcgAnalysis = React.lazy(() => import("./components/EcgAnalysis").then(module => ({ default: module.EcgAnalysis })));
