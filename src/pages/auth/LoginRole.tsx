@@ -54,8 +54,8 @@ export default function LoginRole() {
 
       // Navigate directly to the dashboard - the auth context will handle user state
       navigate(roleCfg.dashboard, { replace: true });
-    } catch (err: any) {
-      toast({ title: "Login failed", description: err.message ?? String(err), variant: "destructive" });
+    } catch (err: unknown) {
+      toast({ title: "Login failed", description: err instanceof Error ? err.message : String(err), variant: "destructive" });
     } finally {
       setLoading(false);
     }

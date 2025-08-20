@@ -19,6 +19,11 @@ interface ChatMessage {
   createdAt: number;
 }
 
+interface SupabaseFunctionResponse {
+  reply?: string;
+  error?: string;
+}
+
 const suggestions: Record<AIAnalysisChatProps["specialty"], string[]> = {
   cardiology: [
     "Chest pain risk stratification (40M, exertional)",
@@ -157,7 +162,8 @@ export default function AIAnalysisChat({ specialty }: AIAnalysisChatProps) {
         },
       });
       if (error) throw error;
-      const reply = (data as any)?.reply ?? "Sorry, I couldn't generate a response.";
+      const response = data as SupabaseFunctionResponse;
+      const reply = response?.reply ?? "Sorry, I couldn't generate a response.";
       addMessage("assistant", reply);
     } catch (e) {
       console.error(e);

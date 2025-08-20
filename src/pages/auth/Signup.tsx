@@ -30,8 +30,8 @@ export default function Signup() {
         title: "Check your inbox",
         description: "We sent a confirmation link. After verifying, log in via your role portal.",
       });
-    } catch (err: any) {
-      toast({ title: "Sign up failed", description: err.message ?? String(err), variant: "destructive" });
+    } catch (err: unknown) {
+      toast({ title: "Sign up failed", description: err instanceof Error ? err.message : String(err), variant: "destructive" });
     } finally {
       setLoading(false);
     }

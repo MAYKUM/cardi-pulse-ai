@@ -36,7 +36,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  const loadUserWithSpecialty = async (sUser: any) => {
+  const loadUserWithSpecialty = async (sUser: { id: string; email?: string; user_metadata?: { full_name?: string }; [key: string]: any }) => {
     const baseUser: User = {
       id: sUser.id,
       name: (sUser.user_metadata?.full_name as string) || (sUser.email?.split("@")[0] ?? "Clinician"),

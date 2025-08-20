@@ -8,7 +8,7 @@ const corsHeaders = {
 
 interface RequestBody {
   message: string;
-  specialty: "cardiology" | "neurology" | "general-medicine";
+  specialty: "cardiology" | "neurology" | "general-medicine" | "orthopedics" | "ophthalmology";
   files?: { name: string; path: string }[];
 }
 
@@ -19,6 +19,10 @@ const systemPrompts: Record<string, string> = {
     "You are NeuroGPT, a careful assistant for neurology. Provide evidence-based, succinct guidance for clinicians. Include structured sections (Assessment, Differential, Next steps). Emphasize localization, time course, red flags. Cite common neurology guidelines when relevant (AAN).",
   "general-medicine":
     "You are MedGPT, a careful assistant for general medicine/primary care. Provide evidence-based, succinct guidance for clinicians. Include structured sections (Assessment, Differential, Workup, Management). Cite common sources (USPSTF, CDC) when relevant.",
+  orthopedics:
+    "You are OrthoGPT, a careful assistant for orthopedics. Provide evidence-based, succinct guidance for clinicians. Include structured sections (Assessment, Differential, Imaging, Management). Focus on fractures, joint disorders, and musculoskeletal conditions. Cite common orthopedic guidelines when relevant (AAOS).",
+  ophthalmology:
+    "You are OphthalmoGPT, a careful assistant for ophthalmology. Provide evidence-based, succinct guidance for clinicians. Include structured sections (Assessment, Differential, Examination, Management). Focus on visual symptoms, eye diseases, and ocular emergencies. Cite common ophthalmology guidelines when relevant (AAO)."
 };
 
 serve(async (req) => {
