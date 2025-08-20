@@ -9,7 +9,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { cn } from "@/lib/utils";
 
 interface AIAnalysisChatProps {
-  specialty: "cardiology" | "neurology" | "general-medicine" | "ophthalmology";
+  specialty: "cardiology" | "neurology" | "general-medicine" | "ophthalmology" | "orthopedics";
 }
 
 interface ChatMessage {
@@ -44,6 +44,12 @@ const suggestions: Record<AIAnalysisChatProps["specialty"], string[]> = {
     "Diabetic retinopathy screening thresholds",
     "Red eye differential: urgent vs routine",
   ],
+  orthopedics: [
+    "ACL tear vs meniscal injury assessment",
+    "Hip fracture surgical planning in elderly",
+    "Rotator cuff tear: conservative vs surgical",
+    "Osteoarthritis pain management strategies",
+  ],
 };
 
 const titles: Record<AIAnalysisChatProps["specialty"], string> = {
@@ -51,6 +57,7 @@ const titles: Record<AIAnalysisChatProps["specialty"], string> = {
   neurology: "Neurology AI Analysis",
   "general-medicine": "General Medicine AI Analysis",
   ophthalmology: "Ophthalmology AI Analysis",
+  orthopedics: "Orthopedics AI Analysis",
 };
 
 const descriptions: Record<AIAnalysisChatProps["specialty"], string> = {
@@ -58,6 +65,7 @@ const descriptions: Record<AIAnalysisChatProps["specialty"], string> = {
   neurology: "Ask neurology-focused questions with careful localization & red flags.",
   "general-medicine": "Primary care guidance for assessment, workup, and management.",
   ophthalmology: "Ophthalmology-focused guidance for imaging, screening, and management.",
+  orthopedics: "Orthopedic guidance for fractures, joints, and musculoskeletal disorders.",
 };
 
 export default function AIAnalysisChat({ specialty }: AIAnalysisChatProps) {

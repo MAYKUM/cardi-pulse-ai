@@ -167,6 +167,7 @@ function AppRoutes() {
         <Route path="osteoporosis" element={<OsteoporosisRisk />} />
         <Route path="joint-registry" element={<JointReplacementRegistry />} />
         <Route path="tele-consult" element={<TeleOrthoConsult />} />
+        <Route path="ai-analysis" element={<AIAnalysisChat specialty="orthopedics" />} />
         <Route path="lab" element={<LabResults />} />
         <Route path="appointments" element={<Appointments />} />
         <Route path="appointments/new" element={<NewAppointment />} />
