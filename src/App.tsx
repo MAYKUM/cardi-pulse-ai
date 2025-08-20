@@ -53,6 +53,7 @@ import { JointReplacementRegistry } from "./components/JointReplacementRegistry"
 import { TeleOrthoConsult } from "./components/TeleOrthoConsult";
 import { TestReports } from "./components/TestReports";
 import { VitalSigns } from "./components/VitalSigns";
+import { EmergencyProcedures } from "./components/EmergencyProcedures";
 
 const queryClient = new QueryClient();
 
