@@ -86,7 +86,6 @@ function AppRoutes() {
           <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/login/:role" element={<LoginRole />} />
-          <Route path="/auth" element={<Navigate to="/login" replace />} />
           <Route path="/logout" element={<LogoutPage />} />
           <Route path="/" element={<Navigate to="/login" replace />} />
           <Route path="*" element={<NotFound />} />
