@@ -5,16 +5,14 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
-import { supabase } from "@/integrations/supabase/client";
-import { ensureDoctorProfile, fetchDoctorProfile, seedPatientsForSpecialty, Specialty } from "@/hooks/useDoctorProfile";
 import { useAuth } from "@/contexts/AuthContext";
 
-const roleMap: Record<string, { specialty: Specialty; label: string; dashboard: string; userType: 'cardio' | 'neurology' | 'orthopedics' | 'generic' | 'ophthalmology' }> = {
-  cardiology: { specialty: "cardiology", label: "Cardiology", dashboard: "/cardiology", userType: 'cardio' },
-  neurology: { specialty: "neurology", label: "Neurology", dashboard: "/neurology", userType: 'neurology' },
-  ophthalmology: { specialty: "ophthalmology", label: "Ophthalmology", dashboard: "/ophthalmology", userType: 'ophthalmology' },
-  orthopedics: { specialty: "orthopedics", label: "Orthopedics", dashboard: "/orthopedics", userType: 'orthopedics' },
-  "general-medicine": { specialty: "general_medicine", label: "General Medicine", dashboard: "/general-medicine", userType: 'generic' },
+const roleMap: Record<string, { label: string; dashboard: string; userType: 'cardio' | 'neurology' | 'orthopedics' | 'generic' | 'ophthalmology' }> = {
+  cardiology: { label: "Cardiology", dashboard: "/cardiology", userType: 'cardio' },
+  neurology: { label: "Neurology", dashboard: "/neurology", userType: 'neurology' },
+  ophthalmology: { label: "Ophthalmology", dashboard: "/ophthalmology", userType: 'ophthalmology' },
+  orthopedics: { label: "Orthopedics", dashboard: "/orthopedics", userType: 'orthopedics' },
+  "general-medicine": { label: "General Medicine", dashboard: "/general-medicine", userType: 'generic' },
 };
 
 export default function LoginRole() {
@@ -39,24 +37,8 @@ export default function LoginRole() {
   const handleAutoLogin = async () => {
     setLoading(true);
     try {
-      // Skip actual authentication - just navigate to dashboard
-      // const { error } = await supabase.auth.signInWithPassword({ email, password });
-      // if (error) throw error;
-
-      // Verify or create doctor profile
-      // const existing = await fetchDoctorProfile();
-      // if (existing && existing.specialty !== roleCfg.specialty) {
-      //   toast({ title: "Access denied", description: `Your account is registered as ${existing.specialty.replace('_',' ')}. Please use the correct portal.`, variant: "destructive" });
-      //   setLoading(false);
-      //   return;
-      // }
-      // if (!existing) {
-      //   await ensureDoctorProfile(roleCfg.specialty);
-      //   await seedPatientsForSpecialty(roleCfg.specialty);
-      // }
-
-      // Navigate directly to the dashboard - auto-login for specialty
-      navigate(roleCfg.dashboard, { replace: true });
+      // Use the mock authentication system
+      login(roleCfg.userType);
     } catch (err: unknown) {
       toast({ title: "Auto-login failed", description: err instanceof Error ? err.message : String(err), variant: "destructive" });
     } finally {
