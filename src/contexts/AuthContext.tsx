@@ -1,4 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { supabase } from "@/integrations/supabase/client";
+import type { Session } from "@supabase/supabase-js";
 
 export type UserType = 'cardio' | 'generic' | 'neurology' | 'orthopedics' | 'ophthalmology';
 
@@ -34,33 +36,73 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Check for mock user in localStorage on component mount
-  useEffect(() => {
-    const mockUser = localStorage.getItem('mockUser');
-    if (mockUser) {
-      try {
-        setUser(JSON.parse(mockUser));
-      } catch (err) {
-        console.error('Error parsing mock user:', err);
-        localStorage.removeItem('mockUser');
+  const loadUserWithSpecialty = async (sUser: { id: string; email?: string; user_metadata?: { full_name?: string }; [key: string]: any }) => {
+    const baseUser: User = {
+      id: sUser.id,
+      name: (sUser.user_metadata?.full_name as string) || (sUser.email?.split("@")[0] ?? "Clinician"),
+      type: 'generic',
+      email: sUser.email ?? ''
+    };
+    
+    // Set base user first
+    setUser(baseUser);
+    
+    // Then fetch specialty
+    try {
+      const { data, error } = await supabase
+        .from('doctors')
+        .select('specialty')
+        .eq('id', sUser.id)
+        .maybeSingle();
+        
+      if (!error && data?.specialty) {
+        const spec = data.specialty as string;
+        const mapped: UserType =
+          spec === 'cardiology' ? 'cardio' :
+          spec === 'neurology' ? 'neurology' :
+          spec === 'ophthalmology' ? 'ophthalmology' :
+          spec === 'orthopedics' ? 'orthopedics' :
+          spec === 'general_medicine' ? 'generic' : 'generic';
+        setUser(prev => prev ? { ...prev, type: mapped } : prev);
       }
+    } catch (err) {
+      console.error('Error fetching user specialty:', err);
     }
-    setIsLoading(false);
+  };
+
+  useEffect(() => {
+    // Set up auth state listener FIRST
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (session?.user) {
+        // Use setTimeout to avoid deadlocks but with a shorter delay to improve UX
+        setTimeout(() => {
+          loadUserWithSpecialty(session.user);
+        }, 10);
+      } else {
+        setUser(null);
+      }
+      setIsLoading(false);
+    });
+
+    // THEN check for existing session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session?.user) {
+        setTimeout(() => {
+          loadUserWithSpecialty(session.user);
+        }, 10);
+      } else {
+        setUser(null);
+      }
+      setIsLoading(false);
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
   }, []);
 
   const login = (userType: UserType) => {
-    // Create a mock user and store in localStorage
-    const mockUser: User = {
-      id: 'mock-user-' + Date.now(),
-      name: 'Demo Doctor',
-      type: userType,
-      email: 'demo@hospital.com'
-    };
-    
-    setUser(mockUser);
-    localStorage.setItem('mockUser', JSON.stringify(mockUser));
-    
-    // Navigate to the appropriate dashboard
+    // This function is used for redirecting to specialty-specific login pages
     const route = userType === 'cardio'
       ? 'cardiology'
       : userType === 'neurology'
@@ -70,13 +112,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       : userType === 'ophthalmology'
       ? 'ophthalmology'
       : 'general-medicine';
-    window.location.assign(`/${route}`);
+    window.location.assign(`/login/${route}`);
   };
 
-  const logout = () => {
+  const logout = async () => {
+    await supabase.auth.signOut();
     setUser(null);
-    localStorage.removeItem('mockUser');
-    window.location.href = '/login';
+    window.location.href = '/logout';
   };
 
   return (
