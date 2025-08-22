@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback, memo } from "react";
 import { Video, Phone, MessageCircle, Share, Monitor, Calendar, Clock, User, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -52,7 +52,7 @@ const upcomingConsults = [
   }
 ];
 
-export function Telecardiology() {
+const Telecardiology = memo(function Telecardiology() {
   const [activeCall, setActiveCall] = useState<string | null>(null);
   const [chatMessages, setChatMessages] = useState([
     { sender: "patient", message: "Hello doctor, I'm ready for the consultation" },
@@ -60,7 +60,7 @@ export function Telecardiology() {
   ]);
   const [newMessage, setNewMessage] = useState("");
 
-  const getPriorityBadge = (priority: string) => {
+  const getPriorityBadge = useCallback((priority: string) => {
     switch (priority) {
       case "urgent":
         return <Badge variant="secondary" className="bg-critical/10 text-critical border-critical/20">Urgent</Badge>;
@@ -69,14 +69,14 @@ export function Telecardiology() {
       default:
         return <Badge variant="outline">{priority}</Badge>;
     }
-  };
+  }, []);
 
-  const sendMessage = () => {
+  const sendMessage = useCallback(() => {
     if (newMessage.trim()) {
-      setChatMessages([...chatMessages, { sender: "doctor", message: newMessage }]);
+      setChatMessages(prev => [...prev, { sender: "doctor", message: newMessage }]);
       setNewMessage("");
     }
-  };
+  }, [newMessage]);
 
   if (activeCall) {
     const consult = upcomingConsults.find(c => c.id === activeCall);
@@ -408,4 +408,6 @@ export function Telecardiology() {
       </Tabs>
     </div>
   );
-}
+});
+
+export { Telecardiology };

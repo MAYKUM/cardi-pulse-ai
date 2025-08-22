@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, memo, useCallback } from "react";
 import { 
   Heart, 
   Search,
@@ -24,7 +24,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { UserProfileDropdown } from "@/components/UserProfileDropdown";
 import { SessionTimer } from "@/components/SessionTimer";
 
-export function AppShell() {
+const AppShell = memo(function AppShell() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [notificationsPanelOpen, setNotificationsPanelOpen] = useState(false);
   const { user } = useAuth();
@@ -32,17 +32,25 @@ export function AppShell() {
   const navigationConfig = getNavigationConfig(user?.type || 'generic');
   const headerActionsConfig = getHeaderActionsConfig(user?.type || 'generic');
 
+  const handleSidebarClose = useCallback(() => {
+    setSidebarOpen(false);
+  }, []);
+
+  const handleSidebarOpen = useCallback(() => {
+    setSidebarOpen(true);
+  }, []);
+
   return (
     <div className="min-h-screen bg-background">
       {/* Mobile sidebar overlay */}
       {sidebarOpen && (
         <div 
           className="fixed inset-0 z-50 lg:hidden"
-          onClick={() => setSidebarOpen(false)}
+          onClick={handleSidebarClose}
         >
           <div className="fixed inset-0 bg-foreground/20 backdrop-blur-sm" />
           <div className="fixed inset-y-0 left-0 w-64 bg-card border-r shadow-medical">
-            <SidebarContent onClose={() => setSidebarOpen(false)} />
+            <SidebarContent onClose={handleSidebarClose} />
           </div>
         </div>
       )}
@@ -62,7 +70,7 @@ export function AppShell() {
             variant="ghost"
             size="sm"
             className="lg:hidden"
-            onClick={() => setSidebarOpen(true)}
+            onClick={handleSidebarOpen}
           >
             <Menu className="h-5 w-5" />
           </Button>
@@ -195,9 +203,9 @@ export function AppShell() {
       </div>
     </div>
   );
-}
+});
 
-function SidebarContent({ onClose }: { onClose?: () => void }) {
+const SidebarContent = memo(function SidebarContent({ onClose }: { onClose?: () => void }) {
   const { user } = useAuth();
   const navigationConfig = getNavigationConfig(user?.type || 'generic');
   
@@ -276,4 +284,6 @@ function SidebarContent({ onClose }: { onClose?: () => void }) {
       </nav>
     </>
   );
-}
+});
+
+export { AppShell };

@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback, memo } from "react";
 import { 
   ZoomIn, 
   ZoomOut, 
@@ -54,7 +54,7 @@ const aiAnalysis = {
   ]
 };
 
-export function DicomViewer() {
+const DicomViewer = memo(function DicomViewer() {
   const [currentSlice, setCurrentSlice] = useState(32);
   const [zoomLevel, setZoomLevel] = useState(100);
   const [brightness, setBrightness] = useState(50);
@@ -413,4 +413,6 @@ export function DicomViewer() {
       </div>
     </div>
   );
-}
+});
+
+export { DicomViewer };

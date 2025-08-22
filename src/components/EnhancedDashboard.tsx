@@ -6,6 +6,7 @@ import {
   TrendingUp,
   TrendingDown,
 } from "lucide-react";
+import { memo, useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -33,13 +34,13 @@ import {
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 
-export function EnhancedDashboard() {
+const EnhancedDashboard = memo(function EnhancedDashboard() {
   const navigate = useNavigate();
   const { user } = useAuth();
   const dashboardCardsConfig = getDashboardCardsConfig(user?.type || 'generic');
   const quickActions = getQuickActionsConfig(user?.type || 'generic');
 
-  const getStatusBadgeVariant = (status: string) => {
+  const getStatusBadgeVariant = useCallback((status: string) => {
     switch (status) {
       case "active": return "default";
       case "follow-up": return "secondary";
@@ -47,16 +48,16 @@ export function EnhancedDashboard() {
       case "critical": return "destructive";
       default: return "secondary";
     }
-  };
+  }, []);
 
-  const getScheduleStatusBadge = (status: string) => {
+  const getScheduleStatusBadge = useCallback((status: string) => {
     switch (status) {
       case "confirmed": return <Badge className="bg-success text-success-foreground">Confirmed</Badge>;
       case "pending": return <Badge variant="secondary">Pending</Badge>;
       case "urgent": return <Badge variant="destructive">Urgent</Badge>;
       default: return <Badge variant="secondary">Unknown</Badge>;
     }
-  };
+  }, []);
 
   return (
     <div className="space-y-6">
@@ -240,4 +241,6 @@ export function EnhancedDashboard() {
       </div>
     </div>
   );
-}
+});
+
+export { EnhancedDashboard };

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback, memo, useMemo } from "react";
 import { 
   Activity, 
   Heart, 
@@ -82,7 +82,7 @@ const leadConfiguration = [
   { name: "V6", position: { x: 3, y: 2 } }
 ];
 
-export function EcgAnalysis() {
+const EcgAnalysis = memo(function EcgAnalysis() {
   const [gain, setGain] = useState(10);
   const [speed, setSpeed] = useState(25);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -91,7 +91,7 @@ export function EcgAnalysis() {
   const [selectedFilter, setSelectedFilter] = useState("0.5-40");
   const [selectedLead, setSelectedLead] = useState("all");
 
-  const getSeverityColor = (severity: string) => {
+  const getSeverityColor = useCallback((severity: string) => {
     switch (severity) {
       case "normal": return "success";
       case "mild": return "warning";
@@ -99,9 +99,9 @@ export function EcgAnalysis() {
       case "severe": return "critical";
       default: return "muted";
     }
-  };
+  }, []);
 
-  const getMeasurementStatus = (measurement: string, value: number) => {
+  const getMeasurementStatus = useCallback((measurement: string, value: number) => {
     const ranges = {
       heartRate: { normal: [60, 100], mild: [50, 120], severe: [40, 150] },
       prInterval: { normal: [120, 200], mild: [100, 220], severe: [80, 250] },
@@ -115,9 +115,10 @@ export function EcgAnalysis() {
     if (value >= range.normal[0] && value <= range.normal[1]) return "normal";
     if (value >= range.mild[0] && value <= range.mild[1]) return "mild";
     return "severe";
-  };
+  }, []);
 
-  const generateSineWave = (lead: string, width: number, height: number) => {
+  // Memoize the expensive SVG path generation
+  const generateSineWave = useCallback((lead: string, width: number, height: number) => {
     const points: string[] = [];
     const amplitude = height * 0.3;
     const frequency = 0.02;
@@ -142,7 +143,17 @@ export function EcgAnalysis() {
     }
     
     return points.join(' ');
-  };
+  }, []);
+
+  // Pre-generate waveforms to avoid computing on every render
+  const leadWaveforms = useMemo(() => {
+    const waveforms: Record<string, string> = {};
+    leadConfiguration.forEach(lead => {
+      waveforms[lead.name] = generateSineWave(lead.name, 200, 100);
+    });
+    waveforms['rhythm'] = generateSineWave('rhythm', 800, 100);
+    return waveforms;
+  }, [generateSineWave]);
 
   return (
     <div className="space-y-6">
@@ -303,7 +314,7 @@ export function EcgAnalysis() {
                         
                         {/* ECG Waveform */}
                         <polyline
-                          points={generateSineWave(lead.name, 200, 100)}
+                          points={leadWaveforms[lead.name]}
                           fill="none"
                           stroke="#00ff00"
                           strokeWidth="1"
@@ -355,7 +366,7 @@ export function EcgAnalysis() {
                       </>
                     )}
                     <polyline
-                      points={generateSineWave("rhythm", 800, 100)}
+                      points={leadWaveforms['rhythm']}
                       fill="none"
                       stroke="#00ff00"
                       strokeWidth="1.5"
@@ -474,4 +485,6 @@ export function EcgAnalysis() {
       </div>
     </div>
   );
-}
+});
+
+export { EcgAnalysis };
