@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo, memo, useCallback } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -280,16 +280,17 @@ const integrations: Integration[] = [
   }
 ];
 
+// Utility functions - these are pure functions so they don't need memoization
 const getStatusColor = (status: string) => {
   switch (status) {
     case 'connected':
-      return 'bg-green-500/10 text-green-600 border-green-200';
+      return 'bg-success/10 text-success border-success/20';
     case 'available':
-      return 'bg-blue-500/10 text-blue-600 border-blue-200';
+      return 'bg-primary/10 text-primary border-primary/20';
     case 'coming-soon':
-      return 'bg-gray-500/10 text-gray-600 border-gray-200';
+      return 'bg-muted/10 text-muted-foreground border-muted/20';
     default:
-      return 'bg-gray-500/10 text-gray-600 border-gray-200';
+      return 'bg-muted/10 text-muted-foreground border-muted/20';
   }
 };
 
@@ -319,15 +320,38 @@ const getButtonText = (status: string) => {
   }
 };
 
-export const IntegrationsHub: React.FC = () => {
+const IntegrationsHub: React.FC = memo(function IntegrationsHub() {
   const { user } = useAuth();
   
-  const filteredIntegrations = integrations.filter(integration => {
-    if (!integration.userTypes) return true; // Universal integrations
-    return integration.userTypes.includes(user?.type || 'generic');
-  });
+  // Memoize filtered integrations to prevent filtering on every render
+  const filteredIntegrations = useMemo(() => {
+    return integrations.filter(integration => {
+      if (!integration.userTypes) return true; // Universal integrations
+      return integration.userTypes.includes(user?.type || 'generic');
+    });
+  }, [user?.type]);
 
-  const categories = Array.from(new Set(filteredIntegrations.map(integration => integration.category)));
+  // Memoize categories to prevent array recreation
+  const categories = useMemo(() => {
+    return Array.from(new Set(filteredIntegrations.map(integration => integration.category)));
+  }, [filteredIntegrations]);
+
+  // Memoize connected count to prevent recalculation
+  const connectedCount = useMemo(() => {
+    return filteredIntegrations.filter(i => i.status === 'connected').length;
+  }, [filteredIntegrations]);
+
+  // Memoize integrations by category to prevent filtering on every render
+  const integrationsByCategory = useMemo(() => {
+    const grouped: Record<string, Integration[]> = {};
+    filteredIntegrations.forEach(integration => {
+      if (!grouped[integration.category]) {
+        grouped[integration.category] = [];
+      }
+      grouped[integration.category].push(integration);
+    });
+    return grouped;
+  }, [filteredIntegrations]);
 
   return (
     <div className="space-y-6">
@@ -341,7 +365,7 @@ export const IntegrationsHub: React.FC = () => {
         <div className="flex items-center gap-2">
           <Globe className="w-5 h-5 text-primary" />
           <span className="text-sm text-muted-foreground">
-            {filteredIntegrations.filter(i => i.status === 'connected').length} Connected
+            {connectedCount} Connected
           </span>
         </div>
       </div>
@@ -350,42 +374,16 @@ export const IntegrationsHub: React.FC = () => {
         <div key={category} className="space-y-4">
           <h2 className="text-xl font-semibold text-foreground">{category}</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {filteredIntegrations
-              .filter(integration => integration.category === category)
-              .map(integration => {
-                const Icon = integration.icon;
-                return (
-                  <Card key={integration.id} className="hover:shadow-md transition-shadow">
-                    <CardHeader className="pb-4">
-                      <div className="flex items-start justify-between">
-                        <div className="flex items-center gap-3">
-                          <div className="p-2 bg-primary/10 rounded-lg">
-                            <Icon className="w-5 h-5 text-primary" />
-                          </div>
-                          <div>
-                            <CardTitle className="text-lg">{integration.name}</CardTitle>
-                          </div>
-                        </div>
-                        <Badge className={getStatusColor(integration.status)}>
-                          {getStatusText(integration.status)}
-                        </Badge>
-                      </div>
-                      <CardDescription className="text-sm">
-                        {integration.description}
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <Button 
-                        variant={integration.status === 'connected' ? 'outline' : 'default'}
-                        className="w-full"
-                        disabled={integration.status === 'coming-soon'}
-                      >
-                        {getButtonText(integration.status)}
-                      </Button>
-                    </CardContent>
-                  </Card>
-                );
-              })}
+            {integrationsByCategory[category]?.map(integration => {
+              const Icon = integration.icon;
+              return (
+                <IntegrationCard 
+                  key={integration.id} 
+                  integration={integration} 
+                  Icon={Icon} 
+                />
+              );
+            })}
           </div>
         </div>
       ))}
@@ -403,4 +401,47 @@ export const IntegrationsHub: React.FC = () => {
       )}
     </div>
   );
-};
+});
+
+// Memoize the integration card component to prevent unnecessary re-renders
+const IntegrationCard = memo(function IntegrationCard({ 
+  integration, 
+  Icon 
+}: { 
+  integration: Integration; 
+  Icon: React.ComponentType<any>; 
+}) {
+  return (
+    <Card className="hover:shadow-md transition-shadow">
+      <CardHeader className="pb-4">
+        <div className="flex items-start justify-between">
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-primary/10 rounded-lg">
+              <Icon className="w-5 h-5 text-primary" />
+            </div>
+            <div>
+              <CardTitle className="text-lg">{integration.name}</CardTitle>
+            </div>
+          </div>
+          <Badge className={getStatusColor(integration.status)}>
+            {getStatusText(integration.status)}
+          </Badge>
+        </div>
+        <CardDescription className="text-sm">
+          {integration.description}
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <Button 
+          variant={integration.status === 'connected' ? 'outline' : 'default'}
+          className="w-full"
+          disabled={integration.status === 'coming-soon'}
+        >
+          {getButtonText(integration.status)}
+        </Button>
+      </CardContent>
+    </Card>
+  );
+});
+
+export { IntegrationsHub };

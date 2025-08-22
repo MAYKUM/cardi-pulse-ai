@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo, useCallback, memo } from "react";
 import { Search, Filter, Plus, MoreHorizontal, Eye, Phone, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -103,13 +103,13 @@ const mockPatients = [
   }
 ];
 
-export function PatientsList() {
+const PatientsList = memo(function PatientsList() {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const { user } = useAuth();
   const navigate = useNavigate();
 
-  const getStatusBadge = (status: string) => {
+  const getStatusBadge = useCallback((status: string) => {
     switch (status) {
       case "active":
         return <Badge variant="secondary" className="bg-success/10 text-success border-success/20">Active</Badge>;
@@ -124,28 +124,31 @@ export function PatientsList() {
       default:
         return <Badge variant="outline">{status}</Badge>;
     }
-  };
+  }, []);
 
-  const filteredPatients = mockPatients.filter(patient => {
-    const matchesSearch = patient.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         patient.condition.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesStatus = statusFilter === "all" || patient.status === statusFilter;
-    return matchesSearch && matchesStatus;
-  });
+  // Memoize filtered patients to prevent filtering on every render
+  const filteredPatients = useMemo(() => {
+    return mockPatients.filter(patient => {
+      const matchesSearch = patient.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                           patient.condition.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesStatus = statusFilter === "all" || patient.status === statusFilter;
+      return matchesSearch && matchesStatus;
+    });
+  }, [searchTerm, statusFilter]);
 
-  const handleNewPatient = () => {
+  const handleNewPatient = useCallback(() => {
     const basePath = user?.type === 'cardio' ? '/cardiology' : 
                      user?.type === 'neurology' ? '/neurology' : 
                      '/general-medicine';
     navigate(`${basePath}/patients/new`);
-  };
+  }, [navigate, user?.type]);
 
-  const handleViewPatient = (patientId: string) => {
+  const handleViewPatient = useCallback((patientId: string) => {
     const basePath = user?.type === 'cardio' ? '/cardiology' : 
                      user?.type === 'neurology' ? '/neurology' : 
                      '/general-medicine';
     navigate(`${basePath}/patients/${patientId}`);
-  };
+  }, [navigate, user?.type]);
 
   return (
     <div className="space-y-6">
@@ -266,4 +269,6 @@ export function PatientsList() {
       </Card>
     </div>
   );
-}
+});
+
+export { PatientsList };
