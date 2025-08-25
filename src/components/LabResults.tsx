@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, memo, useMemo, useCallback } from "react";
 import { TrendingUp, AlertTriangle, Download, Calendar, Filter, Search, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -48,19 +48,21 @@ const labTests = [
   }
 ];
 
-export function LabResults() {
+export const LabResults = memo(function LabResults() {
   const [selectedTest, setSelectedTest] = useState<string | null>(null);
   const [typeFilter, setTypeFilter] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
 
-  const filteredTests = labTests.filter(test => {
-    const matchesType = typeFilter === "all" || test.type.toLowerCase().includes(typeFilter.toLowerCase());
-    const matchesSearch = test.patient.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         test.id.toLowerCase().includes(searchTerm.toLowerCase());
-    return matchesType && matchesSearch;
-  });
+  const filteredTests = useMemo(() => {
+    return labTests.filter(test => {
+      const matchesType = typeFilter === "all" || test.type.toLowerCase().includes(typeFilter.toLowerCase());
+      const matchesSearch = test.patient.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                           test.id.toLowerCase().includes(searchTerm.toLowerCase());
+      return matchesType && matchesSearch;
+    });
+  }, [typeFilter, searchTerm]);
 
-  const getStatusBadge = (status: string) => {
+  const getStatusBadge = useCallback((status: string) => {
     switch (status) {
       case "pending":
         return <Badge variant="secondary" className="bg-warning/10 text-warning border-warning/20">Pending</Badge>;
@@ -69,9 +71,9 @@ export function LabResults() {
       default:
         return <Badge variant="outline">{status}</Badge>;
     }
-  };
+  }, []);
 
-  const getValueStatus = (status: string) => {
+  const getValueStatus = useCallback((status: string) => {
     switch (status) {
       case "high":
         return "text-critical";
@@ -82,7 +84,15 @@ export function LabResults() {
       default:
         return "text-foreground";
     }
-  };
+  }, []);
+
+  const handleSelectTest = useCallback((testId: string) => {
+    setSelectedTest(testId);
+  }, []);
+
+  const handleBackClick = useCallback(() => {
+    setSelectedTest(null);
+  }, []);
 
   if (selectedTest) {
     const test = labTests.find(t => t.id === selectedTest);
@@ -92,7 +102,7 @@ export function LabResults() {
           <div className="flex items-center gap-4">
             <Button 
               variant="ghost" 
-              onClick={() => setSelectedTest(null)}
+              onClick={handleBackClick}
               className="text-muted-foreground hover:text-foreground"
             >
               ← Back to Lab Tests
@@ -338,7 +348,7 @@ export function LabResults() {
             <Button 
               variant="outline" 
               size="sm"
-              onClick={() => setSelectedTest("LAB001")}
+              onClick={() => handleSelectTest("LAB001")}
             >
               Review
             </Button>
@@ -393,7 +403,7 @@ export function LabResults() {
                     <Button
                       variant="ghost"
                       size="sm"
-                      onClick={() => setSelectedTest(test.id)}
+                      onClick={() => handleSelectTest(test.id)}
                     >
                       <FileText className="h-4 w-4 mr-2" />
                       View
@@ -407,4 +417,4 @@ export function LabResults() {
       </Card>
     </div>
   );
-}
+});

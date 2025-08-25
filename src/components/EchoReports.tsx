@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, memo, useMemo, useCallback } from "react";
 import { Eye, Download, Filter, Search, Calendar, Clock, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -38,19 +38,21 @@ const echoStudies = [
   }
 ];
 
-export function EchoReports() {
+export const EchoReports = memo(function EchoReports() {
   const [selectedStudy, setSelectedStudy] = useState<string | null>(null);
   const [statusFilter, setStatusFilter] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
 
-  const filteredStudies = echoStudies.filter(study => {
-    const matchesStatus = statusFilter === "all" || study.status === statusFilter;
-    const matchesSearch = study.patient.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         study.id.toLowerCase().includes(searchTerm.toLowerCase());
-    return matchesStatus && matchesSearch;
-  });
+  const filteredStudies = useMemo(() => {
+    return echoStudies.filter(study => {
+      const matchesStatus = statusFilter === "all" || study.status === statusFilter;
+      const matchesSearch = study.patient.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                           study.id.toLowerCase().includes(searchTerm.toLowerCase());
+      return matchesStatus && matchesSearch;
+    });
+  }, [statusFilter, searchTerm]);
 
-  const getStatusBadge = (status: string) => {
+  const getStatusBadge = useCallback((status: string) => {
     switch (status) {
       case "pending":
         return <Badge variant="secondary" className="bg-warning/10 text-warning border-warning/20">Pending</Badge>;
@@ -59,7 +61,15 @@ export function EchoReports() {
       default:
         return <Badge variant="outline">{status}</Badge>;
     }
-  };
+  }, []);
+
+  const handleSelectStudy = useCallback((studyId: string) => {
+    setSelectedStudy(studyId);
+  }, []);
+
+  const handleBackClick = useCallback(() => {
+    setSelectedStudy(null);
+  }, []);
 
   if (selectedStudy) {
     const study = echoStudies.find(s => s.id === selectedStudy);
@@ -69,7 +79,7 @@ export function EchoReports() {
           <div className="flex items-center gap-4">
             <Button 
               variant="ghost" 
-              onClick={() => setSelectedStudy(null)}
+              onClick={handleBackClick}
               className="text-muted-foreground hover:text-foreground"
             >
               ← Back to Studies
@@ -304,7 +314,7 @@ export function EchoReports() {
                     <Button
                       variant="ghost"
                       size="sm"
-                      onClick={() => setSelectedStudy(study.id)}
+                      onClick={() => handleSelectStudy(study.id)}
                     >
                       <Eye className="h-4 w-4 mr-2" />
                       View
@@ -318,4 +328,4 @@ export function EchoReports() {
       </Card>
     </div>
   );
-}
+});
