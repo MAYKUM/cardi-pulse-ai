@@ -58,6 +58,7 @@ const NotFound = React.lazy(() => import("./pages/NotFound"));
 // Import critical skeleton for immediate LCP improvement
 import { CriticalDashboardSkeleton } from "./components/CriticalDashboardSkeleton";
 
+// Create query client instance
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
