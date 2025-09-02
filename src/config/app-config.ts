@@ -29,7 +29,7 @@ import {
   Target
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
-import type { UserType } from "@/contexts/AuthContext";
+export type UserType = 'cardio' | 'generic' | 'neurology' | 'orthopedics' | 'ophthalmology';
 import { ophthalmologyNavigationConfig } from "./ophthalmology-nav";
 
 // Navigation Configuration
