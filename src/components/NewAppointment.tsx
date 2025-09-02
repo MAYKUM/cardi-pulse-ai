@@ -8,12 +8,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "@/contexts/AuthContext";
+
 import { useToast } from "@/hooks/use-toast";
 
 export function NewAppointment() {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  // Remove auth dependency
   const { toast } = useToast();
   
   const [formData, setFormData] = useState({
@@ -85,20 +85,20 @@ export function NewAppointment() {
     });
 
     // Navigate back to appointments
-    const basePath = user?.type === 'cardio' ? '/cardiology' : 
-                     user?.type === 'neurology' ? '/neurology' : 
-                     '/general-medicine';
+    const specialty = window.location.pathname.split('/')[1];
+    const basePath = `/${specialty}`;
     navigate(`${basePath}/appointments`);
   };
 
   const handleCancel = () => {
-    const basePath = user?.type === 'cardio' ? '/cardiology' : 
-                     user?.type === 'neurology' ? '/neurology' : 
-                     '/general-medicine';
+    const specialty = window.location.pathname.split('/')[1];
+    const basePath = `/${specialty}`;
     navigate(`${basePath}/appointments`);
   };
 
-  const currentReasons = appointmentReasons[user?.type || 'generic'];
+  const userType = window.location.pathname.split('/')[1] === 'cardiology' ? 'cardio' 
+    : window.location.pathname.split('/')[1] === 'neurology' ? 'neurology' : 'generic';
+  const currentReasons = appointmentReasons[userType];
 
   return (
     <div className="space-y-6">

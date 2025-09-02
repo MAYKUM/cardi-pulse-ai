@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useAuth } from "@/contexts/AuthContext";
+
 import { useNavigate } from "react-router-dom";
 
 // Generate random appointments for demonstration
@@ -77,7 +77,7 @@ export function Appointments() {
   const [viewMode, setViewMode] = useState<"day" | "week" | "month">("day");
   const [selectedPatient, setSelectedPatient] = useState<string | null>(null);
   const [typeFilter, setTypeFilter] = useState("all");
-  const { user } = useAuth();
+  // Remove auth dependency
   const navigate = useNavigate();
 
   const getTypeIcon = (type: string) => {
@@ -296,8 +296,11 @@ export function Appointments() {
         </div>
         <Button 
           onClick={() => {
-            const basePath = user?.type === 'cardio' ? '/cardiology' : 
-                           user?.type === 'neurology' ? '/neurology' : 
+            const specialty = window.location.pathname.split('/')[1];
+            const basePath = specialty === 'cardiology' ? '/cardiology' : 
+                           specialty === 'neurology' ? '/neurology' : 
+                           specialty === 'orthopedics' ? '/orthopedics' :
+                           specialty === 'ophthalmology' ? '/ophthalmology' :
                            '/general-medicine';
             navigate(`${basePath}/appointments/new`);
           }}

@@ -2,7 +2,7 @@ import React, { useMemo, memo, useCallback } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { useAuth, UserType } from '@/contexts/AuthContext';
+export type UserType = 'cardio' | 'generic' | 'neurology' | 'orthopedics' | 'ophthalmology';
 import { 
   Database, 
   Cloud, 
@@ -321,15 +321,23 @@ const getButtonText = (status: string) => {
 };
 
 const IntegrationsHub: React.FC = memo(function IntegrationsHub() {
-  const { user } = useAuth();
+  // Get specialty from URL path
+  const specialty = window.location.pathname.split('/')[1];
+  const userType = specialty === 'cardiology' ? 'cardio' 
+    : specialty === 'neurology' ? 'neurology'
+    : specialty === 'orthopedics' ? 'orthopedics'
+    : specialty === 'ophthalmology' ? 'ophthalmology'
+    : 'generic';
+  
+  
   
   // Memoize filtered integrations to prevent filtering on every render
   const filteredIntegrations = useMemo(() => {
     return integrations.filter(integration => {
       if (!integration.userTypes) return true; // Universal integrations
-      return integration.userTypes.includes(user?.type || 'generic');
+      return integration.userTypes.includes(userType);
     });
-  }, [user?.type]);
+  }, [userType]);
 
   // Memoize categories to prevent array recreation
   const categories = useMemo(() => {

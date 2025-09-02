@@ -14,14 +14,12 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { useAuth } from "@/contexts/AuthContext";
-import { UserProfileDropdown } from "@/components/UserProfileDropdown";
-import { SessionTimer } from "@/components/SessionTimer";
+import { SimpleLogout } from "@/components/SimpleLogout";
 
 export function OphthalmologyShell() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [notificationsPanelOpen, setNotificationsPanelOpen] = useState(false);
-  const { user } = useAuth();
+  // Remove auth dependency
 
   return (
     <div className="min-h-screen bg-background">
@@ -67,9 +65,6 @@ export function OphthalmologyShell() {
               />
             </div>
             <div className="flex items-center gap-x-4 lg:gap-x-6">
-              {/* Session Timer */}
-              <SessionTimer />
-              
               {/* Notifications */}
               <Popover open={notificationsPanelOpen} onOpenChange={setNotificationsPanelOpen}>
                 <PopoverTrigger asChild>
@@ -152,19 +147,7 @@ export function OphthalmologyShell() {
               </Popover>
 
               {/* Profile */}
-              <UserProfileDropdown>
-                <Button variant="ghost" className="flex items-center gap-x-2 h-auto p-1">
-                  <div className="h-8 w-8 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center">
-                    <span className="text-sm font-medium text-primary-foreground">
-                      {user?.name ? user.name.charAt(0).toUpperCase() : 'DO'}
-                    </span>
-                  </div>
-                  <div className="hidden sm:block text-left">
-                    <p className="text-sm font-medium">{user?.name || 'Dr. Ophthalmologist'}</p>
-                    <p className="text-xs text-muted-foreground">Ophthalmology</p>
-                  </div>
-                </Button>
-              </UserProfileDropdown>
+              <SimpleLogout />
             </div>
           </div>
         </div>

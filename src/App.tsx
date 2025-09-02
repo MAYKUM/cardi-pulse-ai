@@ -4,8 +4,6 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { AuthProvider, useAuth } from "./contexts/AuthContext";
-import { ProtectedRoute } from "./components/ProtectedRoute";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -34,8 +32,6 @@ const Index = React.lazy(() => import("./pages/Index"));
 const NotFound = React.lazy(() => import("./pages/NotFound"));
 const PatientsList = React.lazy(() => import("./components/PatientsList").then(module => ({ default: module.PatientsList })));
 const NewAppointment = React.lazy(() => import("./components/NewAppointment").then(module => ({ default: module.NewAppointment })));
-const LoginRole = React.lazy(() => import("./pages/auth/LoginRole"));
-const Signup = React.lazy(() => import("./pages/auth/Signup"));
 const LogoutPage = React.lazy(() => import("./pages/auth/LogoutPage"));
 const AIAnalysisChat = React.lazy(() => import("./components/AIAnalysisChat"));
 const OphthalmologyDashboard = React.lazy(() => import("./components/ophthalmology/OphthalmologyDashboard"));
@@ -73,31 +69,14 @@ const LoadingSpinner = () => (
 );
 
 function AppRoutes() {
-  const { user, isLoading } = useAuth();
-
-  if (isLoading) {
-    return <LoadingSpinner />;
-  }
-
-  if (!user) {
-    return (
-      <Suspense fallback={<LoadingSpinner />}>
-        <Routes>
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/login/:role" element={<LoginRole />} />
-          <Route path="/logout" element={<LogoutPage />} />
-          <Route path="/" element={<Navigate to="/login" replace />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </Suspense>
-    );
-  }
-
   return (
     <Suspense fallback={<LoadingSpinner />}>
       <Routes>
-        <Route path="/cardiology" element={<ProtectedRoute><AppShell /></ProtectedRoute>}>
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/logout" element={<LogoutPage />} />
+        <Route path="/" element={<Navigate to="/login" replace />} />
+        
+        <Route path="/cardiology" element={<AppShell />}>
           <Route index element={<EnhancedDashboard />} />
           <Route path="dashboard" element={<EnhancedDashboard />} />
           <Route path="patients" element={<PatientsList />} />
@@ -120,7 +99,7 @@ function AppRoutes() {
           <Route path="settings" element={<SettingsPage />} />
         </Route>
 
-        <Route path="/neurology" element={<ProtectedRoute><AppShell /></ProtectedRoute>}>
+        <Route path="/neurology" element={<AppShell />}>
           <Route index element={<EnhancedDashboard />} />
           <Route path="dashboard" element={<EnhancedDashboard />} />
           <Route path="patients" element={<PatientsList />} />
@@ -147,7 +126,7 @@ function AppRoutes() {
           <Route path="settings" element={<SettingsPage />} />
         </Route>
 
-        <Route path="/orthopedics" element={<ProtectedRoute><AppShell /></ProtectedRoute>}>
+        <Route path="/orthopedics" element={<AppShell />}>
           <Route index element={<EnhancedDashboard />} />
           <Route path="dashboard" element={<EnhancedDashboard />} />
           <Route path="patients" element={<PatientsList />} />
@@ -172,7 +151,7 @@ function AppRoutes() {
           <Route path="emergency" element={<EmergencyProcedures />} />
         </Route>
 
-        <Route path="/ophthalmology" element={<ProtectedRoute><OphthalmologyShell /></ProtectedRoute>}>
+        <Route path="/ophthalmology" element={<OphthalmologyShell />}>
           <Route index element={<OphthalmologyDashboard />} />
           <Route path="dashboard" element={<OphthalmologyDashboard />} />
           <Route path="imaging" element={<MultimodalImagingViewer />} />
@@ -188,7 +167,7 @@ function AppRoutes() {
           <Route path="settings" element={<SettingsPage />} />
         </Route>
 
-        <Route path="/general-medicine" element={<ProtectedRoute><AppShell /></ProtectedRoute>}>
+        <Route path="/general-medicine" element={<AppShell />}>
           <Route index element={<EnhancedDashboard />} />
           <Route path="dashboard" element={<EnhancedDashboard />} />
           <Route path="patients" element={<PatientsList />} />
@@ -211,26 +190,6 @@ function AppRoutes() {
           <Route path="settings" element={<SettingsPage />} />
         </Route>
 
-        {/* Redirect logic */}
-        <Route
-          path="/"
-          element={
-            <Navigate
-              to={`/${
-                user.type === "cardio"
-                  ? "cardiology"
-                  : user.type === "neurology"
-                  ? "neurology"
-                  : user.type === "orthopedics"
-                  ? "orthopedics"
-                  : user.type === "ophthalmology"
-                  ? "ophthalmology"
-                  : "general-medicine"
-              }/dashboard`}
-              replace
-            />
-          }
-        />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </Suspense>
@@ -245,9 +204,7 @@ function App() {
           <Toaster />
           <Sonner />
           <BrowserRouter>
-            <AuthProvider>
-              <AppRoutes />
-            </AuthProvider>
+            <AppRoutes />
           </BrowserRouter>
         </TooltipProvider>
       </QueryClientProvider>

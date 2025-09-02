@@ -20,17 +20,22 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { getNavigationConfig, getHeaderActionsConfig } from "@/config/app-config";
-import { useAuth } from "@/contexts/AuthContext";
-import { UserProfileDropdown } from "@/components/UserProfileDropdown";
-import { SessionTimer } from "@/components/SessionTimer";
+import { SimpleLogout } from "./SimpleLogout";
 
 const AppShell = memo(function AppShell() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [notificationsPanelOpen, setNotificationsPanelOpen] = useState(false);
-  const { user } = useAuth();
+  // Get specialty from URL path
+  const specialty = window.location.pathname.split('/')[1];
   
-  const navigationConfig = getNavigationConfig(user?.type || 'generic');
-  const headerActionsConfig = getHeaderActionsConfig(user?.type || 'generic');
+  const userType = specialty === 'cardiology' ? 'cardio' 
+    : specialty === 'neurology' ? 'neurology'
+    : specialty === 'orthopedics' ? 'orthopedics'
+    : specialty === 'ophthalmology' ? 'ophthalmology'
+    : 'generic';
+  
+  const navigationConfig = getNavigationConfig(userType);
+  const headerActionsConfig = getHeaderActionsConfig(userType);
 
   const handleSidebarClose = useCallback(() => {
     setSidebarOpen(false);
@@ -84,8 +89,8 @@ const AppShell = memo(function AppShell() {
               />
             </div>
             <div className="flex items-center gap-x-4 lg:gap-x-6">
-              {/* Session Timer */}
-              <SessionTimer />
+              {/* Simple Logout */}
+              <SimpleLogout />
               
               {/* Notifications */}
               <Popover open={notificationsPanelOpen} onOpenChange={setNotificationsPanelOpen}>
@@ -169,27 +174,25 @@ const AppShell = memo(function AppShell() {
               </Popover>
 
               {/* Profile */}
-              <UserProfileDropdown>
-                <Button variant="ghost" className="flex items-center gap-x-2 h-auto p-1">
-                  <div className="h-8 w-8 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center">
-                    <span className="text-sm font-medium text-primary-foreground">
-                      {user?.type === 'cardio' ? 'DC' : 
-                       user?.type === 'neurology' ? 'DN' :
-                       user?.type === 'ophthalmology' ? 'DO' :
-                       user?.type === 'orthopedics' ? 'DR' : 'DG'}
-                    </span>
-                  </div>
-                  <div className="hidden sm:block text-left">
-                    <p className="text-sm font-medium">{user?.name || 'Doctor'}</p>
-                    <p className="text-xs text-muted-foreground">
-                      {user?.type === 'cardio' ? 'Cardiologist' : 
-                       user?.type === 'neurology' ? 'Neurologist' :
-                       user?.type === 'ophthalmology' ? 'Ophthalmologist' :
-                       user?.type === 'orthopedics' ? 'Orthopedist' : 'Physician'}
-                    </p>
-                  </div>
-                </Button>
-              </UserProfileDropdown>
+              <Button variant="ghost" className="flex items-center gap-x-2 h-auto p-1">
+                <div className="h-8 w-8 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center">
+                  <span className="text-sm font-medium text-primary-foreground">
+                    {userType === 'cardio' ? 'DC' : 
+                     userType === 'neurology' ? 'DN' :
+                     userType === 'ophthalmology' ? 'DO' :
+                     userType === 'orthopedics' ? 'DR' : 'DG'}
+                  </span>
+                </div>
+                <div className="hidden sm:block text-left">
+                  <p className="text-sm font-medium">Doctor</p>
+                  <p className="text-xs text-muted-foreground">
+                    {userType === 'cardio' ? 'Cardiologist' : 
+                     userType === 'neurology' ? 'Neurologist' :
+                     userType === 'ophthalmology' ? 'Ophthalmologist' :
+                     userType === 'orthopedics' ? 'Orthopedist' : 'Physician'}
+                  </p>
+                </div>
+              </Button>
             </div>
           </div>
         </div>
@@ -206,8 +209,15 @@ const AppShell = memo(function AppShell() {
 });
 
 const SidebarContent = memo(function SidebarContent({ onClose }: { onClose?: () => void }) {
-  const { user } = useAuth();
-  const navigationConfig = getNavigationConfig(user?.type || 'generic');
+  // Get specialty from URL path
+  const specialty = window.location.pathname.split('/')[1];
+  const userType = specialty === 'cardiology' ? 'cardio' 
+    : specialty === 'neurology' ? 'neurology'
+    : specialty === 'orthopedics' ? 'orthopedics'
+    : specialty === 'ophthalmology' ? 'ophthalmology'
+    : 'generic';
+  
+  const navigationConfig = getNavigationConfig(userType);
   
   return (
     <>
@@ -215,14 +225,14 @@ const SidebarContent = memo(function SidebarContent({ onClose }: { onClose?: () 
       <div className="flex h-16 shrink-0 items-center justify-between px-6">
         <div className="flex items-center gap-x-3">
           <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-primary to-accent flex items-center justify-center">
-            {user?.type === 'cardio' ? (
+            {userType === 'cardio' ? (
               <Heart className="h-5 w-5 text-primary-foreground" />
             ) : (
               <Stethoscope className="h-5 w-5 text-primary-foreground" />
             )}
           </div>
           <span className="text-lg font-semibold">
-            {user?.type === 'cardio' ? 'CardioAI' : 'MedicalAI'}
+            {userType === 'cardio' ? 'CardioAI' : 'MedicalAI'}
           </span>
         </div>
         {onClose && (

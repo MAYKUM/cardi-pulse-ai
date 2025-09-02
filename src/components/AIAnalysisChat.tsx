@@ -5,7 +5,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/contexts/AuthContext";
+
 import { cn } from "@/lib/utils";
 
 interface AIAnalysisChatProps {
@@ -75,7 +75,7 @@ const descriptions: Record<AIAnalysisChatProps["specialty"], string> = {
 
 export default function AIAnalysisChat({ specialty }: AIAnalysisChatProps) {
   const { toast } = useToast();
-  const { user } = useAuth();
+  // Remove auth dependency
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
   const [isSending, setIsSending] = useState(false);
@@ -120,16 +120,12 @@ export default function AIAnalysisChat({ specialty }: AIAnalysisChatProps) {
   };
 
   const handleUpload = async () => {
-    if (!user) {
-      toast({ title: "Login required", description: "Please sign in to upload documents.", variant: "destructive" });
-      return;
-    }
     if (!files.length) return;
 
     try {
       const uploadedMeta: { name: string; path: string }[] = [];
       for (const f of files) {
-        const path = `${user.id}/${Date.now()}-${f.name}`;
+        const path = `guest/${Date.now()}-${f.name}`;
         const { error } = await supabase.storage.from("medical-docs").upload(path, f, {
           upsert: false,
           contentType: f.type || undefined,

@@ -3,8 +3,9 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Heart, Stethoscope, LogIn, Brain, Eye } from 'lucide-react';
-import type { UserType } from '@/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
+
+export type UserType = 'cardio' | 'generic' | 'neurology' | 'orthopedics' | 'ophthalmology';
 
 export const LoginPage: React.FC = () => {
   const navigate = useNavigate();
@@ -13,15 +14,15 @@ export const LoginPage: React.FC = () => {
   const handleLogin = () => {
     if (selectedSpecialty) {
       const route = selectedSpecialty === 'cardio'
-        ? 'cardiology'
+        ? '/cardiology'
         : selectedSpecialty === 'neurology'
-        ? 'neurology'
+        ? '/neurology'
         : selectedSpecialty === 'orthopedics'
-        ? 'orthopedics'
+        ? '/orthopedics'
         : selectedSpecialty === 'ophthalmology'
-        ? 'ophthalmology'
-        : 'general-medicine';
-      navigate(`/login/${route}`);
+        ? '/ophthalmology'
+        : '/general-medicine';
+      navigate(route);
     }
   };
   return (

@@ -8,7 +8,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useAuth } from "@/contexts/AuthContext";
+
 import { useNavigate } from "react-router-dom";
 
 // Mock patient data
@@ -106,7 +106,7 @@ const mockPatients = [
 const PatientsList = memo(function PatientsList() {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
-  const { user } = useAuth();
+  // Remove auth dependency
   const navigate = useNavigate();
 
   const getStatusBadge = useCallback((status: string) => {
@@ -137,18 +137,16 @@ const PatientsList = memo(function PatientsList() {
   }, [searchTerm, statusFilter]);
 
   const handleNewPatient = useCallback(() => {
-    const basePath = user?.type === 'cardio' ? '/cardiology' : 
-                     user?.type === 'neurology' ? '/neurology' : 
-                     '/general-medicine';
+    const specialty = window.location.pathname.split('/')[1];
+    const basePath = `/${specialty}`;
     navigate(`${basePath}/patients/new`);
-  }, [navigate, user?.type]);
+  }, [navigate]);
 
   const handleViewPatient = useCallback((patientId: string) => {
-    const basePath = user?.type === 'cardio' ? '/cardiology' : 
-                     user?.type === 'neurology' ? '/neurology' : 
-                     '/general-medicine';
+    const specialty = window.location.pathname.split('/')[1];
+    const basePath = `/${specialty}`;
     navigate(`${basePath}/patients/${patientId}`);
-  }, [navigate, user?.type]);
+  }, [navigate]);
 
   return (
     <div className="space-y-6">

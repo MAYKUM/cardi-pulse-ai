@@ -5,10 +5,10 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { ophthalmologyNavigationConfig } from "@/config/ophthalmology-nav";
-import { useAuth } from "@/contexts/AuthContext";
+
 
 export function OphthalmologySidebar({ onClose }: { onClose?: () => void }) {
-  const { user } = useAuth();
+  // Remove auth dependency
   
   return (
     <>

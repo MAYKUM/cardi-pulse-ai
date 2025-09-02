@@ -32,13 +32,20 @@ import {
   todayScheduleConfig
 } from "@/config/app-config";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "@/contexts/AuthContext";
+
 
 const EnhancedDashboard = memo(function EnhancedDashboard() {
   const navigate = useNavigate();
-  const { user } = useAuth();
-  const dashboardCardsConfig = getDashboardCardsConfig(user?.type || 'generic');
-  const quickActions = getQuickActionsConfig(user?.type || 'generic');
+  // Remove auth dependency
+  const specialty = window.location.pathname.split('/')[1];
+  const userType = specialty === 'cardiology' ? 'cardio' 
+    : specialty === 'neurology' ? 'neurology'
+    : specialty === 'orthopedics' ? 'orthopedics'
+    : specialty === 'ophthalmology' ? 'ophthalmology'
+    : 'generic';
+    
+  const dashboardCardsConfig = getDashboardCardsConfig(userType);
+  const quickActions = getQuickActionsConfig(userType);
 
   const getStatusBadgeVariant = useCallback((status: string) => {
     switch (status) {
