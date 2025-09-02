@@ -6,7 +6,7 @@ import {
   TrendingUp,
   TrendingDown,
 } from "lucide-react";
-import { memo, useCallback } from "react";
+import { memo, useCallback, useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -36,16 +36,22 @@ import { useNavigate } from "react-router-dom";
 
 const EnhancedDashboard = memo(function EnhancedDashboard() {
   const navigate = useNavigate();
-  // Remove auth dependency
-  const specialty = window.location.pathname.split('/')[1];
-  const userType = specialty === 'cardiology' ? 'cardio' 
-    : specialty === 'neurology' ? 'neurology'
-    : specialty === 'orthopedics' ? 'orthopedics'
-    : specialty === 'ophthalmology' ? 'ophthalmology'
-    : 'generic';
-    
-  const dashboardCardsConfig = getDashboardCardsConfig(userType);
-  const quickActions = getQuickActionsConfig(userType);
+  
+  // Optimize critical path calculations with useMemo
+  const { userType, dashboardCardsConfig, quickActions } = useMemo(() => {
+    const specialty = window.location.pathname.split('/')[1];
+    const userType = specialty === 'cardiology' ? 'cardio' 
+      : specialty === 'neurology' ? 'neurology'
+      : specialty === 'orthopedics' ? 'orthopedics'
+      : specialty === 'ophthalmology' ? 'ophthalmology'
+      : 'generic';
+      
+    return {
+      userType,
+      dashboardCardsConfig: getDashboardCardsConfig(userType),
+      quickActions: getQuickActionsConfig(userType)
+    };
+  }, []);
 
   const getStatusBadgeVariant = useCallback((status: string) => {
     switch (status) {

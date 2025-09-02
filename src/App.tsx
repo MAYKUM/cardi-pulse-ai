@@ -55,25 +55,21 @@ const VitalSigns = React.lazy(() => import("./components/VitalSigns").then(modul
 const EmergencyProcedures = React.lazy(() => import("./components/EmergencyProcedures").then(module => ({ default: module.EmergencyProcedures })));
 const NotFound = React.lazy(() => import("./pages/NotFound"));
 
+// Import critical skeleton for immediate LCP improvement
+import { CriticalDashboardSkeleton } from "./components/CriticalDashboardSkeleton";
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       staleTime: 5 * 60 * 1000, // 5 minutes
       refetchOnWindowFocus: false,
+      retry: 1, // Reduce retries for faster loading
     },
   },
 });
 
-// Optimized loading component with faster rendering
-const LoadingSpinner = () => (
-  <div className="min-h-screen bg-background flex items-center justify-center">
-    <div className="space-y-4 w-full max-w-md animate-pulse">
-      <div className="h-12 w-full bg-muted rounded" />
-      <div className="h-4 w-3/4 bg-muted rounded" />
-      <div className="h-4 w-1/2 bg-muted rounded" />
-    </div>
-  </div>
-);
+// Optimized loading component with critical above-the-fold content
+const LoadingSpinner = () => <CriticalDashboardSkeleton />;
 
 function AppRoutes() {
   return (
