@@ -8,8 +8,21 @@
 }
 
 html {
+  font-display: swap;
   font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
-  font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* LCP Critical content optimization */
+.critical-above-fold {
+  contain: layout style paint;
+  transform: translateZ(0);
+  will-change: auto;
+}
+
+.lcp-optimized {
+  content-visibility: auto;
+  contain-intrinsic-size: 0 500px;
 }
 
 /* Optimize layout shifts */
@@ -18,9 +31,9 @@ img, video {
   max-width: 100%;
 }
 
-/* Fast skeleton loading */
+/* Fast skeleton loading with better performance */
 .loading-skeleton {
-  background: linear-gradient(90deg, #f0f0f0 25%, transparent 37%, #f0f0f0 63%);
+  background: linear-gradient(90deg, hsl(var(--muted)) 25%, transparent 37%, hsl(var(--muted)) 63%);
   background-size: 400% 100%;
   animation: skeleton-loading 1.5s ease-in-out infinite;
 }
@@ -28,6 +41,11 @@ img, video {
 @keyframes skeleton-loading {
   0% { background-position: 100% 50%; }
   100% { background-position: -100% 50%; }
+}
+
+/* Reduce render blocking */
+.async-content {
+  content-visibility: auto;
 }
 
 /* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 

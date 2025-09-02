@@ -13,16 +13,28 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
     
-    <!-- Critical CSS inline for instant rendering -->
+    <!-- Critical CSS inline for instant LCP rendering -->
     <style>
-      body { font-family: 'Inter', system-ui, -apple-system, sans-serif; }
+      /* Critical CSS for fastest initial paint */
+      * { box-sizing: border-box; }
+      body { 
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif; 
+        margin: 0;
+        background: #fafafa;
+        font-display: swap;
+      }
       #root { min-height: 100vh; }
       .critical-above-fold { 
-        min-height: 100vh; 
-        display: flex; 
-        align-items: center; 
-        justify-content: center; 
+        contain: layout style paint; 
+        transform: translateZ(0); 
+        will-change: auto;
       }
+      .lcp-optimized { 
+        content-visibility: auto; 
+        contain-intrinsic-size: 0 500px; 
+      }
+      /* Reduce layout shift */
+      img, video { height: auto; max-width: 100%; }
     </style>
 
     <meta property="og:title" content="cardi-pulse-ai" />

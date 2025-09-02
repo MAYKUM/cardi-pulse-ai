@@ -5,7 +5,7 @@ const CriticalDashboardSkeleton = memo(function CriticalDashboardSkeleton() {
   const skeletonCards = useMemo(() => Array(4).fill(null), []);
   
   return (
-    <div className="critical-above-fold p-6 space-y-6 animate-pulse">
+    <div className="critical-above-fold lcp-optimized p-6 space-y-6 animate-pulse">
       {/* Top metrics cards - critical for LCP */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {skeletonCards.map((_, i) => (

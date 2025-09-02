@@ -55,8 +55,9 @@ const VitalSigns = React.lazy(() => import("./components/VitalSigns").then(modul
 const EmergencyProcedures = React.lazy(() => import("./components/EmergencyProcedures").then(module => ({ default: module.EmergencyProcedures })));
 const NotFound = React.lazy(() => import("./pages/NotFound"));
 
-// Import critical skeleton for immediate LCP improvement
+// Import critical skeletons for immediate LCP improvement
 import { CriticalDashboardSkeleton } from "./components/CriticalDashboardSkeleton";
+import { NeuroSkeletonLoader } from "./components/NeuroSkeletonLoader";
 
 // Create query client instance
 const queryClient = new QueryClient({
@@ -69,8 +70,9 @@ const queryClient = new QueryClient({
   },
 });
 
-// Optimized loading component with critical above-the-fold content
+// Optimized loading components with critical above-the-fold content
 const LoadingSpinner = () => <CriticalDashboardSkeleton />;
+const NeuroLoadingSpinner = () => <NeuroSkeletonLoader />;
 
 function AppRoutes() {
   return (
@@ -109,14 +111,14 @@ function AppRoutes() {
           <Route path="patients" element={<PatientsList />} />
           <Route path="patients/new" element={<PatientIntakeForm />} />
           <Route path="patients/:id" element={<PatientDashboard />} />
-          <Route path="eeg" element={<EEGAnalysis />} />
+          <Route path="eeg" element={<Suspense fallback={<NeuroLoadingSpinner />}><EEGAnalysis /></Suspense>} />
           <Route path="video-eeg" element={<VideoEEG />} />
           <Route path="emg" element={<EMGPanel />} />
           <Route path="imaging" element={<DicomViewer />} />
-          <Route path="neuropsych" element={<NeuropsychTests />} />
-          <Route path="movement" element={<MovementTracking />} />
+          <Route path="neuropsych" element={<Suspense fallback={<NeuroLoadingSpinner />}><NeuropsychTests /></Suspense>} />
+          <Route path="movement" element={<Suspense fallback={<NeuroLoadingSpinner />}><MovementTracking /></Suspense>} />
           <Route path="lab" element={<LabResults />} />
-          <Route path="seizure-logs" element={<SeizureLogs />} />
+          <Route path="seizure-logs" element={<Suspense fallback={<NeuroLoadingSpinner />}><SeizureLogs /></Suspense>} />
           <Route path="telehealth" element={<Telecardiology />} />
           <Route path="devices" element={<DeviceIntegration />} />
           <Route path="integrations" element={<IntegrationsHub />} />

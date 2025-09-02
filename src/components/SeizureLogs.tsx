@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, memo, useMemo, useCallback, Suspense, lazy } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { AlertTriangle, Plus, Calendar, Clock, MapPin, FileText, TrendingUp } from 'lucide-react';
+
+// Lazy load heavy components to improve initial LCP
+const SeizureEventDialog = lazy(() => import('./seizure/SeizureEventDialog'));
+const SeizureAnalytics = lazy(() => import('./seizure/SeizureAnalytics'));
+const SeizureCalendar = lazy(() => import('./seizure/SeizureCalendar'));
 
 interface SeizureEvent {
   id: string;
@@ -24,7 +24,7 @@ interface SeizureEvent {
   recovery_time: number;
 }
 
-export const SeizureLogs: React.FC = () => {
+export const SeizureLogs: React.FC = memo(() => {
   const [isAddingEvent, setIsAddingEvent] = useState(false);
   const [newEvent, setNewEvent] = useState<Partial<SeizureEvent>>({
     date: new Date().toISOString().split('T')[0],
@@ -33,7 +33,8 @@ export const SeizureLogs: React.FC = () => {
     witnesses: false
   });
 
-  const mockEvents: SeizureEvent[] = [
+  // Memoize mock data to prevent re-creation
+  const mockEvents: SeizureEvent[] = useMemo(() => [
     {
       id: '1',
       date: '2024-01-15',
@@ -60,7 +61,7 @@ export const SeizureLogs: React.FC = () => {
       description: 'Brief focal seizure with déjà vu sensation',
       recovery_time: 180
     }
-  ];
+  ], []);
 
   const seizureTypes = [
     'Tonic-Clonic',
@@ -84,23 +85,23 @@ export const SeizureLogs: React.FC = () => {
     'Dehydration'
   ];
 
-  const getSeverityColor = (severity: string) => {
+  const getSeverityColor = useCallback((severity: string) => {
     switch (severity) {
-      case 'mild': return 'bg-green-100 text-green-800';
-      case 'moderate': return 'bg-yellow-100 text-yellow-800';
-      case 'severe': return 'bg-red-100 text-red-800';
-      default: return 'bg-gray-100 text-gray-800';
+      case 'mild': return 'bg-success/10 text-success';
+      case 'moderate': return 'bg-warning/10 text-warning';
+      case 'severe': return 'bg-destructive/10 text-destructive';
+      default: return 'bg-muted text-muted-foreground';
     }
-  };
+  }, []);
 
-  const formatDuration = (seconds: number) => {
+  const formatDuration = useCallback((seconds: number) => {
     if (seconds < 60) return `${seconds}s`;
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
     return remainingSeconds > 0 ? `${minutes}m ${remainingSeconds}s` : `${minutes}m`;
-  };
+  }, []);
 
-  const handleAddEvent = () => {
+  const handleAddEvent = useCallback(() => {
     // In a real app, this would save to the database
     console.log('Adding seizure event:', newEvent);
     setIsAddingEvent(false);
@@ -110,7 +111,7 @@ export const SeizureLogs: React.FC = () => {
       severity: 'mild',
       witnesses: false
     });
-  };
+  }, [newEvent]);
 
   return (
     <div className="space-y-6">
@@ -119,106 +120,15 @@ export const SeizureLogs: React.FC = () => {
           <h1 className="text-3xl font-bold text-foreground">Seizure Logs</h1>
           <p className="text-muted-foreground">Track and monitor seizure events</p>
         </div>
-        <Dialog open={isAddingEvent} onOpenChange={setIsAddingEvent}>
-          <DialogTrigger asChild>
-            <Button>
-              <Plus className="mr-2 h-4 w-4" />
-              Log Seizure
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
-            <DialogHeader>
-              <DialogTitle>Log New Seizure Event</DialogTitle>
-              <DialogDescription>
-                Record details of the seizure event for medical tracking
-              </DialogDescription>
-            </DialogHeader>
-            <div className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <Label htmlFor="date">Date</Label>
-                  <Input
-                    id="date"
-                    type="date"
-                    value={newEvent.date}
-                    onChange={(e) => setNewEvent({...newEvent, date: e.target.value})}
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="time">Time</Label>
-                  <Input
-                    id="time"
-                    type="time"
-                    value={newEvent.time}
-                    onChange={(e) => setNewEvent({...newEvent, time: e.target.value})}
-                  />
-                </div>
-              </div>
-              
-              <div>
-                <Label htmlFor="type">Seizure Type</Label>
-                <Select onValueChange={(value) => setNewEvent({...newEvent, type: value})}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select seizure type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {seizureTypes.map((type) => (
-                      <SelectItem key={type} value={type}>{type}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <Label htmlFor="duration">Duration (seconds)</Label>
-                  <Input
-                    id="duration"
-                    type="number"
-                    placeholder="120"
-                    onChange={(e) => setNewEvent({...newEvent, duration: parseInt(e.target.value)})}
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="severity">Severity</Label>
-                  <Select onValueChange={(value: 'mild' | 'moderate' | 'severe') => setNewEvent({...newEvent, severity: value})}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select severity" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="mild">Mild</SelectItem>
-                      <SelectItem value="moderate">Moderate</SelectItem>
-                      <SelectItem value="severe">Severe</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-
-              <div>
-                <Label htmlFor="location">Location</Label>
-                <Input
-                  id="location"
-                  placeholder="e.g., Home - Bedroom"
-                  onChange={(e) => setNewEvent({...newEvent, location: e.target.value})}
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="description">Description</Label>
-                <Textarea
-                  id="description"
-                  placeholder="Describe what happened during the seizure..."
-                  onChange={(e) => setNewEvent({...newEvent, description: e.target.value})}
-                />
-              </div>
-
-              <div className="flex gap-2">
-                <Button onClick={handleAddEvent} className="flex-1">Save Event</Button>
-                <Button variant="outline" onClick={() => setIsAddingEvent(false)}>Cancel</Button>
-              </div>
-            </div>
-          </DialogContent>
-        </Dialog>
+        <Suspense fallback={<Button disabled><Plus className="mr-2 h-4 w-4" />Log Seizure</Button>}>
+          <SeizureEventDialog
+            isOpen={isAddingEvent}
+            onOpenChange={setIsAddingEvent}
+            newEvent={newEvent}
+            onEventChange={setNewEvent}
+            onSave={handleAddEvent}
+          />
+        </Suspense>
       </div>
 
       <Tabs defaultValue="recent" className="space-y-6">
@@ -308,69 +218,41 @@ export const SeizureLogs: React.FC = () => {
         </TabsContent>
 
         <TabsContent value="calendar" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Seizure Calendar</CardTitle>
-              <CardDescription>Visual timeline of seizure events</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="h-64 flex items-center justify-center text-muted-foreground">
-                <div className="text-center">
-                  <Calendar className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                  <p>Calendar component would be integrated here</p>
-                  <p className="text-sm">showing seizure events by date</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+          <Suspense fallback={
+            <Card>
+              <CardHeader>
+                <div className="h-6 bg-muted rounded w-1/4 animate-pulse" />
+                <div className="h-4 bg-muted rounded w-1/3 animate-pulse" />
+              </CardHeader>
+              <CardContent>
+                <div className="h-64 bg-muted rounded animate-pulse" />
+              </CardContent>
+            </Card>
+          }>
+            <SeizureCalendar events={mockEvents} />
+          </Suspense>
         </TabsContent>
 
         <TabsContent value="analytics" className="space-y-4">
-          <div className="grid gap-4 md:grid-cols-2">
-            <Card>
-              <CardHeader>
-                <CardTitle>Frequency Trends</CardTitle>
-                <CardDescription>Seizure frequency over time</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="h-48 flex items-center justify-center text-muted-foreground">
-                  <div className="text-center">
-                    <TrendingUp className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                    <p>Frequency chart</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>Common Triggers</CardTitle>
-                <CardDescription>Most frequent seizure triggers</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  {commonTriggers.slice(0, 5).map((trigger, index) => (
-                    <div key={trigger} className="flex items-center justify-between">
-                      <span className="text-sm">{trigger}</span>
-                      <div className="flex items-center gap-2">
-                        <div className="w-20 h-2 bg-muted rounded-full overflow-hidden">
-                          <div 
-                            className="h-full bg-primary rounded-full"
-                            style={{ width: `${Math.random() * 100}%` }}
-                          />
-                        </div>
-                        <span className="text-sm text-muted-foreground">
-                          {Math.floor(Math.random() * 10)}
-                        </span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+          <Suspense fallback={
+            <div className="grid gap-4 md:grid-cols-2">
+              {Array(2).fill(null).map((_, i) => (
+                <Card key={i}>
+                  <CardHeader>
+                    <div className="h-6 bg-muted rounded w-1/3 animate-pulse" />
+                    <div className="h-4 bg-muted rounded w-1/2 animate-pulse" />
+                  </CardHeader>
+                  <CardContent>
+                    <div className="h-48 bg-muted rounded animate-pulse" />
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          }>
+            <SeizureAnalytics events={mockEvents} />
+          </Suspense>
         </TabsContent>
       </Tabs>
     </div>
   );
-};
+});
