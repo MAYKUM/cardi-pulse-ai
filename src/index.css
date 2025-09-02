@@ -111,6 +111,12 @@ All colors MUST be HSL.
 
     --radius: 0.5rem;
 
+    /* Specialty theme variables - dynamically updated */
+    --specialty-primary: var(--primary);
+    --specialty-secondary: var(--secondary);
+    --specialty-accent: var(--accent);
+    --specialty-gradient: var(--gradient-primary);
+
     --sidebar-background: 0 0% 98%;
 
     --sidebar-foreground: 240 5.3% 26.1%;
