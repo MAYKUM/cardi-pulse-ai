@@ -1,4 +1,4 @@
-import { useState, memo, useCallback } from "react";
+import { useState, memo, useCallback, useMemo } from "react";
 import { 
   Heart, 
   Search,
@@ -25,17 +25,20 @@ import { SimpleLogout } from "./SimpleLogout";
 const AppShell = memo(function AppShell() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [notificationsPanelOpen, setNotificationsPanelOpen] = useState(false);
-  // Get specialty from URL path
-  const specialty = window.location.pathname.split('/')[1];
   
-  const userType = specialty === 'cardiology' ? 'cardio' 
+  // Memoize specialty detection for performance
+  const specialty = useMemo(() => window.location.pathname.split('/')[1], []);
+  
+  
+  // Memoize user type and configurations for performance
+  const userType = useMemo(() => specialty === 'cardiology' ? 'cardio' 
     : specialty === 'neurology' ? 'neurology'
     : specialty === 'orthopedics' ? 'orthopedics'
     : specialty === 'ophthalmology' ? 'ophthalmology'
-    : 'generic';
+    : 'generic', [specialty]);
   
-  const navigationConfig = getNavigationConfig(userType);
-  const headerActionsConfig = getHeaderActionsConfig(userType);
+  const navigationConfig = useMemo(() => getNavigationConfig(userType), [userType]);
+  const headerActionsConfig = useMemo(() => getHeaderActionsConfig(userType), [userType]);
 
   const handleSidebarClose = useCallback(() => {
     setSidebarOpen(false);
@@ -209,15 +212,16 @@ const AppShell = memo(function AppShell() {
 });
 
 const SidebarContent = memo(function SidebarContent({ onClose }: { onClose?: () => void }) {
-  // Get specialty from URL path
-  const specialty = window.location.pathname.split('/')[1];
-  const userType = specialty === 'cardiology' ? 'cardio' 
+  // Memoize specialty detection for performance  
+  const specialty = useMemo(() => window.location.pathname.split('/')[1], []);
+  
+  const userType = useMemo(() => specialty === 'cardiology' ? 'cardio' 
     : specialty === 'neurology' ? 'neurology'
     : specialty === 'orthopedics' ? 'orthopedics'
     : specialty === 'ophthalmology' ? 'ophthalmology'
-    : 'generic';
+    : 'generic', [specialty]);
   
-  const navigationConfig = getNavigationConfig(userType);
+  const navigationConfig = useMemo(() => getNavigationConfig(userType), [userType]);
   
   return (
     <>

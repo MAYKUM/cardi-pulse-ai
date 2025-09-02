@@ -5,14 +5,15 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { ErrorBoundary } from "./components/ErrorBoundary";
-import { Skeleton } from "@/components/ui/skeleton";
 
-// Lazy load all components for better performance
-const AppShell = React.lazy(() => import("./components/AppShell").then(module => ({ default: module.AppShell })));
-const OphthalmologyShell = React.lazy(() => import("./components/ophthalmology/OphthalmologyShell").then(module => ({ default: module.OphthalmologyShell })));
-const LoginPage = React.lazy(() => import("./components/LoginPage").then(module => ({ default: module.LoginPage })));
-const PatientDashboard = React.lazy(() => import("./components/PatientDashboard").then(module => ({ default: module.PatientDashboard })));
+// Import critical shell components directly for immediate availability
+import { AppShell } from "./components/AppShell";
+import { OphthalmologyShell } from "./components/ophthalmology/OphthalmologyShell";
+import { LoginPage } from "./components/LoginPage";
+
+// Optimized lazy loading with correct export structure
 const EnhancedDashboard = React.lazy(() => import("./components/EnhancedDashboard").then(module => ({ default: module.EnhancedDashboard })));
+const PatientDashboard = React.lazy(() => import("./components/PatientDashboard").then(module => ({ default: module.PatientDashboard })));
 const PatientIntakeForm = React.lazy(() => import("./components/PatientIntakeForm").then(module => ({ default: module.PatientIntakeForm })));
 const DicomViewer = React.lazy(() => import("./components/DicomViewer").then(module => ({ default: module.DicomViewer })));
 const EcgAnalysis = React.lazy(() => import("./components/EcgAnalysis").then(module => ({ default: module.EcgAnalysis })));
@@ -28,8 +29,6 @@ const EMGPanel = React.lazy(() => import("./components/EMGPanel").then(module =>
 const XrayAnalysis = React.lazy(() => import("./components/XrayAnalysis").then(module => ({ default: module.XrayAnalysis })));
 const SurgicalPlanning = React.lazy(() => import("./components/SurgicalPlanning").then(module => ({ default: module.SurgicalPlanning })));
 const RehabTracker = React.lazy(() => import("./components/RehabTracker").then(module => ({ default: module.RehabTracker })));
-const Index = React.lazy(() => import("./pages/Index"));
-const NotFound = React.lazy(() => import("./pages/NotFound"));
 const PatientsList = React.lazy(() => import("./components/PatientsList").then(module => ({ default: module.PatientsList })));
 const NewAppointment = React.lazy(() => import("./components/NewAppointment").then(module => ({ default: module.NewAppointment })));
 const LogoutPage = React.lazy(() => import("./pages/auth/LogoutPage"));
@@ -54,16 +53,24 @@ const TeleOrthoConsult = React.lazy(() => import("./components/TeleOrthoConsult"
 const TestReports = React.lazy(() => import("./components/TestReports").then(module => ({ default: module.TestReports })));
 const VitalSigns = React.lazy(() => import("./components/VitalSigns").then(module => ({ default: module.VitalSigns })));
 const EmergencyProcedures = React.lazy(() => import("./components/EmergencyProcedures").then(module => ({ default: module.EmergencyProcedures })));
+const NotFound = React.lazy(() => import("./pages/NotFound"));
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 5 * 60 * 1000, // 5 minutes
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
-// Loading component for Suspense fallbacks
+// Optimized loading component with faster rendering
 const LoadingSpinner = () => (
   <div className="min-h-screen bg-background flex items-center justify-center">
-    <div className="space-y-4 w-full max-w-md">
-      <Skeleton className="h-12 w-full" />
-      <Skeleton className="h-4 w-3/4" />
-      <Skeleton className="h-4 w-1/2" />
+    <div className="space-y-4 w-full max-w-md animate-pulse">
+      <div className="h-12 w-full bg-muted rounded" />
+      <div className="h-4 w-3/4 bg-muted rounded" />
+      <div className="h-4 w-1/2 bg-muted rounded" />
     </div>
   </div>
 );

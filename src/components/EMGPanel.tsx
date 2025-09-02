@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, memo, useMemo, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -17,20 +17,21 @@ import {
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
-export const EMGPanel: React.FC = () => {
+const EMGPanel = memo(function EMGPanel() {
   const { toast } = useToast();
   const [selectedTest, setSelectedTest] = useState('median-motor');
 
-  const studyInfo = {
+  // Memoize static data to prevent recreation on every render
+  const studyInfo = useMemo(() => ({
     patientId: "NP-2024-003",
     patientName: "Amit Singh",
     age: 52,
     studyDate: "2024-01-23",
     referringPhysician: "Dr. Neurologist",
     indication: "Carpal Tunnel Syndrome"
-  };
+  }), []);
 
-  const motorTests = [
+  const motorTests = useMemo(() => [
     {
       nerve: "Median Motor",
       muscle: "Abductor Pollicis Brevis",
@@ -61,9 +62,9 @@ export const EMGPanel: React.FC = () => {
       status: "normal",
       reference: "< 3.0 ms"
     }
-  ];
+  ], []);
 
-  const sensoryTests = [
+  const sensoryTests = useMemo(() => [
     {
       nerve: "Median Sensory",
       segment: "Wrist-Index",
@@ -84,9 +85,9 @@ export const EMGPanel: React.FC = () => {
       status: "normal", 
       reference: "< 3.5 ms"
     }
-  ];
+  ], []);
 
-  const fWaveTests = [
+  const fWaveTests = useMemo(() => [
     {
       nerve: "Median F-Wave",
       latency: "32.5 ms",
@@ -95,9 +96,9 @@ export const EMGPanel: React.FC = () => {
       status: "abnormal",
       reference: "< 31.0 ms"
     }
-  ];
+  ], []);
 
-  const aiInterpretation = {
+  const aiInterpretation = useMemo(() => ({
     diagnosis: "Moderate Carpal Tunnel Syndrome",
     confidence: 92,
     findings: [
@@ -111,24 +112,24 @@ export const EMGPanel: React.FC = () => {
       "Consider wrist splinting",
       "Follow-up in 3 months if conservative management"
     ]
-  };
+  }), []);
 
-  const generateReport = () => {
+  const generateReport = useCallback(() => {
     toast({
       title: "EMG/NCS Report Generated",
       description: "Comprehensive report with AI interpretation ready for download"
     });
-  };
+  }, [toast]);
 
-  const getStatusColor = (status: string) => {
+  const getStatusColor = useCallback((status: string) => {
     return status === 'normal' ? 'text-success' : 'text-warning';
-  };
+  }, []);
 
-  const getStatusIcon = (status: string) => {
+  const getStatusIcon = useCallback((status: string) => {
     return status === 'normal' ? 
       <CheckCircle className="w-4 h-4 text-success" /> : 
       <AlertCircle className="w-4 h-4 text-warning" />;
-  };
+  }, []);
 
   return (
     <div className="p-6 space-y-6">
@@ -408,4 +409,6 @@ export const EMGPanel: React.FC = () => {
       </div>
     </div>
   );
-};
+});
+
+export { EMGPanel };
