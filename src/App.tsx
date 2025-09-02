@@ -38,6 +38,7 @@ const MultimodalImagingViewer = React.lazy(() => import("./components/ophthalmol
 const IOLPlanning = React.lazy(() => import("./components/ophthalmology/IOLPlanning"));
 const GlaucomaSuite = React.lazy(() => import("./components/ophthalmology/GlaucomaSuite"));
 const TeleScreeningPortal = React.lazy(() => import("./components/ophthalmology/TeleScreeningPortal"));
+const OphthalmologyAppointments = React.lazy(() => import("./components/ophthalmology/OphthalmologyAppointments").then(module => ({ default: module.OphthalmologyAppointments })));
 const SettingsPage = React.lazy(() => import("./components/settings/SettingsPage").then(module => ({ default: module.SettingsPage })));
 const NeuropsychTests = React.lazy(() => import("./components/NeuropsychTests").then(module => ({ default: module.NeuropsychTests })));
 const MovementTracking = React.lazy(() => import("./components/MovementTracking").then(module => ({ default: module.MovementTracking })));
@@ -160,6 +161,7 @@ function AppRoutes() {
         <Route path="/ophthalmology" element={<OphthalmologyShell />}>
           <Route index element={<OphthalmologyDashboard />} />
           <Route path="dashboard" element={<OphthalmologyDashboard />} />
+          <Route path="appointments" element={<Suspense fallback={<LoadingSpinner />}><OphthalmologyAppointments /></Suspense>} />
           <Route path="imaging" element={<MultimodalImagingViewer />} />
           <Route path="iol-planning" element={<IOLPlanning />} />
           <Route path="glaucoma" element={<GlaucomaSuite />} />
