@@ -1,4 +1,4 @@
-import { useState, memo, useCallback, useMemo } from "react";
+import React, { useState, memo, useCallback, useMemo } from "react";
 import { 
   Heart, 
   Search,
